@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'user/bottom_navigator.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   runApp(const MyApp());
 }
 
@@ -105,7 +109,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
                   ),
-                  onPressed: null,
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const BottomNavigator(
+                                  name: "Test Name",
+                                )));
+                  },
                   child: const Text("USER PAGE"))
             ],
           ),
