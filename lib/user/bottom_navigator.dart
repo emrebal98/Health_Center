@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:health_center/user/pages/bookAnAppointment/appointment.dart';
 import 'package:health_center/user/pages/home.dart';
-import 'package:health_center/user/pages/appointment.dart';
+import 'package:health_center/user/pages/appointment_history.dart';
 import 'package:health_center/user/pages/perscription.dart';
 import 'package:health_center/user/pages/setting.dart';
 
@@ -25,17 +26,23 @@ class BottomNavigator extends StatefulWidget {
 class _BottomNavigatorState extends State<BottomNavigator> {
   int _currentIndex = 0;
 
-  void _incrementTab(index) {
+  void _changeTab(index) {
     setState(() {
       _currentIndex = index;
     });
   }
 
+  // void _createButton(BuildContext context) {
+  //   // Navigator.push(
+  //   //     context, MaterialPageRoute(builder: (context) => AppointmentRoute()));
+  //   Navigator.of(context).push(AppointmentRoute());
+  // }
+
   final List _screens = [
     const HomeRoute(
       userName: "Test Name",
     ),
-    const AppointmentRoute(),
+    const AppointmentHistoryRoute(),
     const PerscriptionRoute(),
     const SettingRoute()
   ];
@@ -55,10 +62,8 @@ class _BottomNavigatorState extends State<BottomNavigator> {
             highlightColor: Colors.transparent),
         child: FloatingActionButton(
           onPressed: () {
-            _incrementTab(
-                _currentIndex + 1 < 4 ? _currentIndex + 1 : _currentIndex = 0);
+            Navigator.of(context).push(appointmentRoute());
           },
-          tooltip: "Increment",
           child: const Icon(Icons.add),
         ),
       ),
@@ -68,7 +73,6 @@ class _BottomNavigatorState extends State<BottomNavigator> {
         // ↑ use .withAlpha(0) to debug/peek underneath ↑ BottomAppBar
         elevation: 0, // ← removes slight shadow under FAB, hardly noticeable
         // ↑ default elevation is 8. Peek it by setting color ↑ alpha to 0
-        // clipBehavior: Clip.antiAlias,
 
         child: Theme(
           data: ThemeData(
@@ -107,7 +111,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
                   label: "Fourth")
             ],
             onTap: (index) {
-              _incrementTab(index);
+              _changeTab(index);
             },
           ),
         ),

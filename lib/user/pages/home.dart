@@ -166,7 +166,11 @@ class HomeRoute extends StatelessWidget {
                     title: "Your Prescriptions",
                     button: true,
                     top: 5,
-                  )
+                  ),
+                  const PrescriptionCard(
+                      imageName: "doctor9.png",
+                      recipeName: "Tuberculosis Recipe",
+                      recipeDesc: "Given by Tawfiq Bahri")
                 ],
               )
             ],
@@ -263,6 +267,56 @@ class DividerTitle extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.w400)))
             : Container(),
       ]),
+    );
+  }
+}
+
+//Prescription Card
+class PrescriptionCard extends StatelessWidget {
+  const PrescriptionCard(
+      {Key? key,
+      required this.imageName,
+      required this.recipeName,
+      required this.recipeDesc})
+      : super(key: key);
+
+  final String imageName, recipeName, recipeDesc;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.only(left: 20, top: 15, bottom: 15),
+        decoration: BoxDecoration(
+            color: HexColor("#EBF2F5"),
+            borderRadius: const BorderRadius.all(Radius.circular(5))),
+        height: 120,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset("lib/images/doctor9.png"),
+            Padding(
+              padding: const EdgeInsets.only(top: 30, left: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    recipeName,
+                    style: const TextStyle(fontWeight: FontWeight.w400),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(recipeDesc,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w300, fontSize: 13))
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
