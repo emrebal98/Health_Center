@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'user/bottom_navigator.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp(
+      {Key? key, this.home = const MyHomePage(title: 'Flutter Demo Home Page')})
+      : super(key: key);
+  final Widget home;
   // CHANGE
   // This widget is the root of your application.
   @override
@@ -24,7 +31,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.asfasfafsafsafsafs
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: home,
     );
   }
 }
@@ -105,7 +112,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
                   ),
-                  onPressed: null,
+                  onPressed: () {
+                    // Navigator.pushReplacement(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => const BottomNavigator(
+                    //               name: "Test Name",
+                    //             )));
+                    runApp(
+                        const MyApp(home: BottomNavigator(name: "Test Name")));
+                    // runApp(const BottomNavigator(name: "Test Name"));
+                  },
                   child: const Text("USER PAGE"))
             ],
           ),
