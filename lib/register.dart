@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'register.dart';
 
-class Login extends StatelessWidget {
+class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +39,34 @@ class Login extends StatelessWidget {
                               child: TextField(
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: "Email or Phone number",
+                                    hintText: "Email",
+                                    hintStyle:
+                                        TextStyle(color: Colors.grey[400])),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(color: Colors.grey))),
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Phone Number",
+                                    hintStyle:
+                                        TextStyle(color: Colors.grey[400])),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(color: Colors.grey))),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Password",
                                     hintStyle:
                                         TextStyle(color: Colors.grey[400])),
                               ),
@@ -50,11 +76,11 @@ class Login extends StatelessWidget {
                               child: TextField(
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: "Password",
+                                    hintText: "RePassword",
                                     hintStyle:
                                         TextStyle(color: Colors.grey[400])),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -64,35 +90,6 @@ class Login extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           print("Container clicked");
-                        },
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(colors: [
-                                Color.fromRGBO(143, 148, 251, 1),
-                                Color.fromRGBO(143, 148, 251, .6),
-                              ])),
-                          child: Center(
-                            child: Text(
-                              "Login",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          print("Container clicked");
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Register()),
-                          );
                         },
                         child: Container(
                           height: 50,
