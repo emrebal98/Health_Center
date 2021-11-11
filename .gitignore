@@ -1,3 +1,6 @@
+linux/
+pubspec.lock
+
 # Miscellaneous
 *.class
 *.log

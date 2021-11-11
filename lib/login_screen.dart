@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 import 'register.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
+
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  bool _isObscure = true;
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +48,7 @@ class Login extends StatelessWidget {
                                   border: Border(
                                       bottom: BorderSide(color: Colors.grey))),
                               child: TextField(
+                                controller: emailController,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Email or Phone number",
@@ -48,7 +59,19 @@ class Login extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(8.0),
                               child: TextField(
+                                obscureText: _isObscure,
+                                controller: passwordController,
                                 decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                      icon: Icon(_isObscure
+                                          ? Icons.visibility
+                                          : Icons.visibility_off),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isObscure = !_isObscure;
+                                        });
+                                      },
+                                    ),
                                     border: InputBorder.none,
                                     hintText: "Password",
                                     hintStyle:
@@ -63,7 +86,14 @@ class Login extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
-                          print("Container clicked");
+                          if (passwordController.text == "123" &&
+                              emailController.text == "doctor") {
+                            print("doctorrr");
+                          } else if (passwordController.text == "123" &&
+                              emailController.text == "user") {
+                          } else {
+                            print("başka bişey");
+                          }
                         },
                         child: Container(
                           height: 50,
@@ -88,7 +118,6 @@ class Login extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
-                          print("Container clicked");
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => Register()),
