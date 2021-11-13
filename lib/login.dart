@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_center/main.dart';
-import 'package:health_center/user/pages/home.dart';
+import 'package:health_center/user/bottom_navigator.dart';
 import 'register.dart';
 
 class Login extends StatefulWidget {
@@ -113,12 +113,8 @@ class _LoginState extends State<Login> {
                             setState(() {
                               _warningMessage = false;
                             });
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      HomeRoute(userName: "user")),
-                            );
+                            runApp(const MyApp(
+                                home: BottomNavigator(name: "Test Name")));
                           } else {
                             setState(() {
                               _warningMessage = true;

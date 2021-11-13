@@ -54,7 +54,7 @@ class DoctorListPage extends StatelessWidget {
           )
         ],
       ),
-      body: Column(
+      body: ListView(
         children: [
           DividerTitle(title: "Choose a Doctor", button: false),
           DoctorListCard(

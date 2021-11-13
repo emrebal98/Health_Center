@@ -49,10 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 child: const Text('Login / Register'),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Login()),
-                  );
+                  runApp(const MyApp(home: Login()));
                 },
               ),
               TextButton(
