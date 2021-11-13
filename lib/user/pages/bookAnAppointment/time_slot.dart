@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:health_center/user/pages/bookAnAppointment/appointment.dart';
+import 'package:health_center/user/pages/bookAnAppointment/confirm_appointment.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:health_center/user/pages/home.dart';
@@ -28,11 +30,14 @@ class TimeSlotPage extends StatefulWidget {
   _TimeSlotState createState() => _TimeSlotState();
 }
 
+DateTime _date =
+    DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
 class _TimeSlotState extends State<TimeSlotPage> {
   List<TimeObject> timeSlotList = [];
 
-  DateTime _date =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  // DateTime _date =
+  //     DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   void _selectDate() async {
     DateTime? newDate = await showDatePicker(
@@ -107,7 +112,7 @@ class _TimeSlotState extends State<TimeSlotPage> {
             ),
           ),
         ),
-        body: Column(
+        body: ListView(
           children: [
             Container(
               height: 80,
@@ -138,19 +143,22 @@ class _TimeSlotState extends State<TimeSlotPage> {
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 20),
-              child: Text(
-                "Select a day",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-              ),
-            ),
+            DividerTitle(title: "Select a day", button: false),
+            // const Padding(
+            //   padding: EdgeInsets.only(bottom: 20),
+            //   child: Text(
+            //     "Select a day",
+            //     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+            //   ),
+            // ),
             Container(
-                margin: EdgeInsets.only(bottom: 40),
+                margin: EdgeInsets.only(bottom: 40, left: 20, right: 20),
                 height: 50,
-                color: Colors.amber[300],
                 child: Material(
-                  type: MaterialType.transparency,
+                  // type: MaterialType.transparency,
+                  color: Colors.amber[300],
+                  borderRadius: const BorderRadius.all(Radius.circular(40)),
+                  clipBehavior: Clip.antiAlias,
                   child: InkWell(
                     onTap: () {
                       _selectDate();
@@ -161,7 +169,7 @@ class _TimeSlotState extends State<TimeSlotPage> {
                       children: [
                         Icon(
                           Icons.date_range_rounded,
-                          size: 40,
+                          size: 36,
                         ),
                         SizedBox(
                           width: 5,
@@ -169,7 +177,7 @@ class _TimeSlotState extends State<TimeSlotPage> {
                         Text(
                           DateFormat('EEEE, d MMM').format(_date),
                           style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.w500),
+                              fontSize: 22, fontWeight: FontWeight.w500),
                         )
                       ],
                     ),
@@ -192,10 +200,11 @@ class TimeCard extends StatelessWidget {
   final bool enabled;
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Expanded(
+        child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 50,
-      width: 150,
+      // width: 150,
       child: Material(
         borderRadius: const BorderRadius.all(Radius.circular(40)),
         color: enabled ? Colors.greenAccent[400] : Colors.grey,
@@ -204,7 +213,11 @@ class TimeCard extends StatelessWidget {
         child: InkWell(
           onTap: enabled
               ? () {
-                  print("Click time " + time);
+                  var newDate = _date.add(Duration(
+                      hours: int.parse(time.split(":").first),
+                      minutes: int.parse(time.split(":").last)));
+
+                  Navigator.of(context).push(confirmAppointmentRoute(newDate));
                 }
               : null,
           splashColor: enabled ? null : Colors.transparent,
@@ -217,7 +230,7 @@ class TimeCard extends StatelessWidget {
           )),
         ),
       ),
-    );
+    ));
   }
 }
 
@@ -241,7 +254,7 @@ List<Widget> getTimeCards(List<TimeObject> list) {
     TimeObject t4 = i + 3 < len ? list[i + 3] : TimeObject.empty();
 
     result.add(Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -250,25 +263,25 @@ List<Widget> getTimeCards(List<TimeObject> list) {
                     time: t1.time,
                     enabled: t1.enable,
                   )
-                : Container(),
+                : Expanded(child: Container()),
             !t2.empty
                 ? TimeCard(
                     time: t2.time,
                     enabled: t2.enable,
                   )
-                : Container(),
+                : Expanded(child: Container()),
             !t3.empty
                 ? TimeCard(
                     time: t3.time,
                     enabled: t3.enable,
                   )
-                : Container(),
+                : Expanded(child: Container()),
             !t4.empty
                 ? TimeCard(
                     time: t4.time,
                     enabled: t4.enable,
                   )
-                : Container(),
+                : Expanded(child: Container()),
           ],
         )));
     // if (i % 8 == 0)

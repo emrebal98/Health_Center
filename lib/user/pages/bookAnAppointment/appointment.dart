@@ -106,7 +106,7 @@ class HealthConcernCard extends StatelessWidget {
       child: !empty
           ? Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
-              width: 300,
+              // width: 300,
               height: 80,
               child: Material(
                   color: HexColor("#EBF2F5"),

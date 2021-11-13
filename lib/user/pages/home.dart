@@ -170,7 +170,11 @@ class HomeRoute extends StatelessWidget {
                   const PrescriptionCard(
                       imageName: "doctor9.png",
                       recipeName: "Tuberculosis Recipe",
-                      recipeDesc: "Given by Tawfiq Bahri")
+                      recipeDesc: "Given by Tawfiq Bahri"),
+                  const SizedBox(
+                    // To scroll more
+                    height: 40,
+                  )
                 ],
               )
             ],
