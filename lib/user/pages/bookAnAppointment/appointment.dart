@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_center/helper/hex_color.dart';
 import 'package:health_center/user/pages/bookAnAppointment/doctor_list.dart';
 import 'package:health_center/user/pages/home.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 Route appointmentRoute() {
   return PageRouteBuilder(
@@ -92,13 +93,20 @@ class HealthConcernCard extends StatelessWidget {
                           ClipOval(
                             child: Image.asset(
                               "lib/images/" + imageName + ".png",
-                              height: 60,
+                              // height: 50,
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 10),
-                            child: Text(healthConcerName),
-                          )
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.16,
+                              child: AutoSizeText(
+                                healthConcerName,
+                                // overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                            ),
+                          ),
                         ]),
                       ))),
             )

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:health_center/helper/scroll_behavior.dart';
 import 'package:health_center/user/pages/home.dart';
 import 'package:health_center/helper/hex_color.dart';
 
@@ -31,7 +32,7 @@ class DoctorRoute extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: ScrollConfiguration(
-        behavior: MyBehavior(),
+        behavior: MyScrollBehavior(),
         child: ListView(
           children: [
             Column(

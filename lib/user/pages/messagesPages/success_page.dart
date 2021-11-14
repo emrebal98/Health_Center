@@ -72,6 +72,8 @@ class _SuccessPageState extends State<SuccessPage> {
           ),
           Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(
                   height: 80,
@@ -82,6 +84,7 @@ class _SuccessPageState extends State<SuccessPage> {
                 ),
                 const Text(
                   "Appointment booked successfully",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 24,
                       color: Colors.white,

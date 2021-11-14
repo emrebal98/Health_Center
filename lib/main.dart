@@ -6,6 +6,7 @@ import 'login.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
   final Widget home;
   // CHANGE
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -79,6 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     //         builder: (context) => const BottomNavigator(
                     //               name: "Test Name",
                     //             )));
+                    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+                        overlays: [SystemUiOverlay.bottom]);
                     runApp(
                         const MyApp(home: BottomNavigator(name: "Test Name")));
                     // runApp(const BottomNavigator(name: "Test Name"));
