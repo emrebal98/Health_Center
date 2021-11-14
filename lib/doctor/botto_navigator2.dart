@@ -61,8 +61,8 @@ class _BottomNavigatorState extends State<BottomNavigator2> {
             backgroundColor: Theme.of(context).primaryColor.withAlpha(0),
             currentIndex: _currentIndex,
             type: BottomNavigationBarType.fixed,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
+            showSelectedLabels: true,
+            showUnselectedLabels: true,
             unselectedItemColor:
                 Theme.of(context).colorScheme.onBackground.withAlpha(80),
             selectedItemColor: Theme.of(context).colorScheme.onBackground,

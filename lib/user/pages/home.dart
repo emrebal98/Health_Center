@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:health_center/helper/hex_color.dart';
+import 'package:health_center/helper/scroll_behavior.dart';
 
 class HomeRoute extends StatelessWidget {
   const HomeRoute({Key? key, required this.userName}) : super(key: key);
@@ -28,7 +29,7 @@ class HomeRoute extends StatelessWidget {
           automaticallyImplyLeading: false,
         ),
         body: ScrollConfiguration(
-          behavior: MyBehavior(),
+          behavior: MyScrollBehavior(),
           child: ListView(
             children: [
               Column(
@@ -323,14 +324,5 @@ class PrescriptionCard extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-// To remove scroll effect
-class MyBehavior extends ScrollBehavior {
-  @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
-    return child;
   }
 }
