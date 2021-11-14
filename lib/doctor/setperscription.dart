@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:health_center/doctor/doctor.dart';
 import 'package:health_center/doctor/perscription.dart';
-import 'package:health_center/helper/hex_color.dart';
 
 Route setPerscriptionRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => setPerscription(),
+    pageBuilder: (context, animation, secondaryAnimation) => SetPerscription(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(1, 0);
       const end = Offset.zero;
@@ -21,8 +19,8 @@ Route setPerscriptionRoute() {
   );
 }
 
-class setPerscription extends StatelessWidget {
-  setPerscription({
+class SetPerscription extends StatelessWidget {
+  SetPerscription({
     Key? key,
   }) : super(key: key);
 
@@ -30,6 +28,7 @@ class setPerscription extends StatelessWidget {
     Patients("", "Emre Erkan"),
     Patients("", "Samet Sarıal"),
   ];
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -53,12 +52,12 @@ class setPerscription extends StatelessWidget {
         ),
       ),
       body: ListView(
-        padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+        padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
         children: [
           Container(
             height: 80,
             // color: Colors.amberAccent,
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Row(
               children: [
                 Image.asset("lib/images/doctor9.png"),
@@ -85,14 +84,14 @@ class setPerscription extends StatelessWidget {
             ),
           ),
           Container(
-              margin: EdgeInsets.only(
+              margin: const EdgeInsets.only(
                 right: 10,
                 left: 10,
                 bottom: 8,
               ),
               height: 150,
               color: Colors.white,
-              child: TextField(
+              child: const TextField(
                 maxLines: 10,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -103,8 +102,8 @@ class setPerscription extends StatelessWidget {
             onPressed: () {
               print('add perscription');
             },
-            icon: Icon(Icons.add, size: 18),
-            label: Text('Add Perscription'),
+            icon: const Icon(Icons.add, size: 18),
+            label: const Text('Add Perscription'),
           ),
           const Padding(
             padding: EdgeInsets.only(bottom: 20, top: 30),
@@ -154,17 +153,16 @@ class _PreviousPerscriptionState extends State<PreviousPerscription> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: const [
                             Text(
                               "Samet",
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w500),
+                              style: TextStyle(fontWeight: FontWeight.w500),
                             ),
-                            const SizedBox(
+                            SizedBox(
                               height: 5,
                             ),
                             Text("x adet Y, z adet Q",
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontWeight: FontWeight.w300, fontSize: 13))
                           ],
                         ),
@@ -193,17 +191,16 @@ class _PreviousPerscriptionState extends State<PreviousPerscription> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: const [
                             Text(
                               "Samet",
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w500),
+                              style: TextStyle(fontWeight: FontWeight.w500),
                             ),
-                            const SizedBox(
+                            SizedBox(
                               height: 5,
                             ),
                             Text("x adet Y, z adet Q",
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontWeight: FontWeight.w300, fontSize: 13))
                           ],
                         ),
@@ -232,17 +229,16 @@ class _PreviousPerscriptionState extends State<PreviousPerscription> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: const [
                             Text(
                               "Samet",
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w500),
+                              style: TextStyle(fontWeight: FontWeight.w500),
                             ),
-                            const SizedBox(
+                            SizedBox(
                               height: 5,
                             ),
                             Text("x adet Y, z adet Q",
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontWeight: FontWeight.w300, fontSize: 13))
                           ],
                         ),
@@ -260,7 +256,7 @@ class _PreviousPerscriptionState extends State<PreviousPerscription> {
           child: Material(
               child: InkWell(
                   onTap: () {
-                    print("clicked");
+                    // print("clicked");
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(15),
@@ -271,17 +267,16 @@ class _PreviousPerscriptionState extends State<PreviousPerscription> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: const [
                             Text(
                               "Samet",
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w500),
+                              style: TextStyle(fontWeight: FontWeight.w500),
                             ),
-                            const SizedBox(
+                            SizedBox(
                               height: 5,
                             ),
                             Text("x adet Y, z adet Q",
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontWeight: FontWeight.w300, fontSize: 13))
                           ],
                         ),

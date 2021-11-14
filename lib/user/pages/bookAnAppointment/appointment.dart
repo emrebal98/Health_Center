@@ -1,29 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_center/helper/hex_color.dart';
 import 'package:health_center/user/pages/bookAnAppointment/doctor_list.dart';
-
 import 'package:health_center/user/pages/home.dart';
-
-// class AppointmentRoute extends CupertinoPageRoute {
-//   AppointmentRoute()
-//       : super(builder: (BuildContext context) => AppointmentPage());
-
-//   // OPTIONAL IF YOU WISH TO HAVE SOME EXTRA ANIMATION WHILE ROUTING
-//   @override
-//   Widget buildPage(BuildContext context, Animation<double> animation,
-//       Animation<double> secondaryAnimation) {
-//     return SlideTransition(position: animation.)
-//     RotationTransition(
-//         turns: animation,
-//         child: ScaleTransition(
-//           scale: animation,
-//           child: FadeTransition(
-//             opacity: animation,
-//             child: AppointmentPage(),
-//           ),
-//         ));
-//   }
-// }
 
 Route appointmentRoute() {
   return PageRouteBuilder(
@@ -47,9 +25,10 @@ class AppointmentPage extends StatelessWidget {
   AppointmentPage({Key? key}) : super(key: key);
 
   final List<HealthConcern> healthConcernList = [
-    HealthConcern("", "name1"),
-    HealthConcern("", "name2"),
-    HealthConcern("", "name3")
+    HealthConcern("dental-care", "Dental Care"),
+    HealthConcern("ent", "Ear Nose Throat"),
+    HealthConcern("general-surgery", "General Surgery"),
+    HealthConcern("eye-specialist", "Eye Specialist"),
   ];
 
   @override
@@ -73,15 +52,6 @@ class AppointmentPage extends StatelessWidget {
             color: Colors.blue,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-              color: Colors.blue,
-            ),
-          )
-        ],
       ),
       body: Column(
         children: getHealthConcerns(healthConcernList),
@@ -119,7 +89,12 @@ class HealthConcernCard extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(15),
                         child: Row(children: [
-                          Image.asset("lib/images/" + imageName + ".png"),
+                          ClipOval(
+                            child: Image.asset(
+                              "lib/images/" + imageName + ".png",
+                              height: 60,
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(left: 10),
                             child: Text(healthConcerName),

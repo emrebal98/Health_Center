@@ -65,7 +65,8 @@ class HomeRoute extends StatelessWidget {
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                         color: HexColor("#2E83F8"),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5))),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -77,7 +78,7 @@ class HomeRoute extends StatelessWidget {
                             height: 10,
                           ),
                           const Text(
-                            "10 January 2021, 14:30",
+                            "01 December 2021, 10:30",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -115,7 +116,7 @@ class HomeRoute extends StatelessWidget {
                                         height: 5,
                                       ),
                                       Text(
-                                        "Family Doctor, Cardiologist",
+                                        "Surgeon",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 12,
@@ -145,19 +146,19 @@ class HomeRoute extends StatelessWidget {
                           DoctorCard(
                               imageName: "doctor1",
                               doctorName: "Tawfiq Bahri",
-                              doctorDesc: "Family Doctor, Cardiologist"),
+                              doctorDesc: "Surgeon"),
                           DoctorCard(
                               imageName: "doctor2",
                               doctorName: "Trashae Hubbard",
-                              doctorDesc: "Family Doctor, Therapist"),
+                              doctorDesc: "Dentist"),
                           DoctorCard(
                               imageName: "doctor3",
                               doctorName: "Jesus Moruga",
-                              doctorDesc: "Family Doctor, Therapist"),
+                              doctorDesc: "Otorhinolaryngologist"),
                           DoctorCard(
-                              imageName: "doctor4",
-                              doctorName: "Gabriel Moreira",
-                              doctorDesc: "Family Doctor, Therapist")
+                              imageName: "doctor6",
+                              doctorName: "Lisa Moreira",
+                              doctorDesc: "Ophthalmologist")
                         ],
                       ),
                     ),
@@ -202,7 +203,7 @@ class DoctorCard extends StatelessWidget {
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(5)),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.2), //color of shadow
@@ -228,11 +229,11 @@ class DoctorCard extends StatelessWidget {
           ),
           Text(
             doctorName,
-            style: TextStyle(fontWeight: FontWeight.w400),
+            style: const TextStyle(fontWeight: FontWeight.w400),
           ),
           Text(doctorDesc,
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.w200, fontSize: 13))
+              style: const TextStyle(fontWeight: FontWeight.w200, fontSize: 13))
         ],
       ),
     );

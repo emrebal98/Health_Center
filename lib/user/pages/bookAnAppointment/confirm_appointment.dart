@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:health_center/user/pages/home.dart';
 import 'package:health_center/user/pages/messagesPages/success_page.dart';
 import 'package:intl/intl.dart';
 
@@ -67,12 +66,13 @@ class _ConfirmAppointmentState extends State<ConfirmAppointmentPage> {
                 Container(
                   height: 80,
                   // color: Colors.amberAccent,
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: Row(
                     children: [
                       Image.asset("lib/images/doctor9.png"),
                       Padding(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.only(left: 10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -88,7 +88,8 @@ class _ConfirmAppointmentState extends State<ConfirmAppointmentPage> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(bottom: 40, left: 20, right: 20),
+                  margin:
+                      const EdgeInsets.only(bottom: 40, left: 20, right: 20),
                   // height: 50,
                   child: Column(
                     // crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,11 +102,11 @@ class _ConfirmAppointmentState extends State<ConfirmAppointmentPage> {
                         title: "Time",
                         desc: DateFormat('HH:mm').format(widget.date),
                       ),
-                      InfoCard(
+                      const InfoCard(
                         title: "Health Concern",
                         desc: "Physiotherapy",
                       ),
-                      InfoCard(
+                      const InfoCard(
                         title: "This appointment for:",
                         desc: "Full Name",
                       ),
@@ -156,14 +157,14 @@ class InfoCard extends StatelessWidget {
         ),
         Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.w300),
+          style: const TextStyle(fontWeight: FontWeight.w300),
         ),
         const SizedBox(
           height: 8,
         ),
         Text(
           desc,
-          style: TextStyle(fontWeight: FontWeight.w600),
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         const SizedBox(
           height: 5,
