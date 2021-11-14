@@ -1,13 +1,14 @@
 import 'dart:math';
-import 'package:health_center/user/pages/bookAnAppointment/appointment.dart';
 import 'package:health_center/user/pages/bookAnAppointment/confirm_appointment.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:health_center/user/pages/home.dart';
 
-Route timeSlotRoute() {
+Route timeSlotRoute(Doctor doctor) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => TimeSlotPage(),
+    pageBuilder: (context, animation, secondaryAnimation) => TimeSlotPage(
+      doctor: doctor,
+    ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(1, 0);
       const end = Offset.zero;
@@ -24,8 +25,8 @@ Route timeSlotRoute() {
 }
 
 class TimeSlotPage extends StatefulWidget {
-  TimeSlotPage({Key? key}) : super(key: key);
-
+  const TimeSlotPage({Key? key, required this.doctor}) : super(key: key);
+  final Doctor doctor;
   @override
   _TimeSlotState createState() => _TimeSlotState();
 }
@@ -36,16 +37,13 @@ DateTime _date =
 class _TimeSlotState extends State<TimeSlotPage> {
   List<TimeObject> timeSlotList = [];
 
-  // DateTime _date =
-  //     DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-
   void _selectDate() async {
     DateTime? newDate = await showDatePicker(
       context: context,
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       initialDate: _date,
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 7)),
+      lastDate: DateTime.now().add(const Duration(days: 7)),
       helpText: 'Select a date',
     );
     if (newDate != null) {
@@ -117,25 +115,25 @@ class _TimeSlotState extends State<TimeSlotPage> {
             Container(
               height: 80,
               // color: Colors.amberAccent,
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: Row(
                 children: [
-                  Image.asset("lib/images/doctor9.png"),
+                  Image.asset("lib/images/" + widget.doctor.imageName + ".png"),
                   Padding(
-                    padding: EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          "Tawfiq Bahri",
-                          style: TextStyle(fontWeight: FontWeight.w500),
+                          widget.doctor.name,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Text("Family Doctor, Cardiologist",
-                            style: TextStyle(
+                        Text(widget.doctor.desc,
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w300, fontSize: 13))
                       ],
                     ),
@@ -143,19 +141,11 @@ class _TimeSlotState extends State<TimeSlotPage> {
                 ],
               ),
             ),
-            DividerTitle(title: "Select a day", button: false),
-            // const Padding(
-            //   padding: EdgeInsets.only(bottom: 20),
-            //   child: Text(
-            //     "Select a day",
-            //     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-            //   ),
-            // ),
+            const DividerTitle(title: "Select a day", button: false),
             Container(
-                margin: EdgeInsets.only(bottom: 40, left: 20, right: 20),
+                margin: const EdgeInsets.only(bottom: 40, left: 20, right: 20),
                 height: 50,
                 child: Material(
-                  // type: MaterialType.transparency,
                   color: Colors.amber[300],
                   borderRadius: const BorderRadius.all(Radius.circular(40)),
                   clipBehavior: Clip.antiAlias,
@@ -167,16 +157,16 @@ class _TimeSlotState extends State<TimeSlotPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.date_range_rounded,
                           size: 36,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Text(
                           DateFormat('EEEE, d MMM').format(_date),
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 22, fontWeight: FontWeight.w500),
                         )
                       ],
@@ -290,4 +280,11 @@ List<Widget> getTimeCards(List<TimeObject> list) {
     //   ));
   }
   return result;
+}
+
+class Doctor {
+  String name;
+  String desc;
+  String imageName;
+  Doctor(this.name, this.desc, this.imageName);
 }

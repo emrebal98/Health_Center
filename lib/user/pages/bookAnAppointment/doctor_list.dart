@@ -4,7 +4,8 @@ import 'package:health_center/user/pages/home.dart';
 
 Route doctorListRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => DoctorListPage(),
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        const DoctorListPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(1, 0);
       const end = Offset.zero;
@@ -28,7 +29,7 @@ class DoctorListPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Doctor",
+          "Doctors",
           style: TextStyle(
               color: Colors.black, fontSize: 18, fontWeight: FontWeight.w400),
         ),
@@ -55,33 +56,28 @@ class DoctorListPage extends StatelessWidget {
         ],
       ),
       body: ListView(
-        children: [
+        children: const [
           DividerTitle(title: "Choose a Doctor", button: false),
           DoctorListCard(
-            imageName: "doctor9",
+            imageName: "doctor1",
             doctorName: "Tawfiq Bahri",
-            doctorDesc: "Family Doctor, Cardiologist",
+            doctorDesc: "Surgeon",
           ),
           DoctorListCard(
-            imageName: "doctor9",
-            doctorName: "Tawfiq Bahri",
-            doctorDesc: "Family Doctor, Cardiologist",
+            imageName: "doctor2",
+            doctorName: "Trashae Hubbard",
+            doctorDesc: "Dentist",
           ),
           DoctorListCard(
-            imageName: "doctor9",
-            doctorName: "Tawfiq Bahri",
-            doctorDesc: "Family Doctor, Cardiologist",
+            imageName: "doctor3",
+            doctorName: "Jesus Morugai",
+            doctorDesc: "Otorhinolaryngologist",
           ),
           DoctorListCard(
-            imageName: "doctor9",
-            doctorName: "Tawfiq Bahri",
-            doctorDesc: "Family Doctor, Cardiologist",
+            imageName: "doctor6",
+            doctorName: "Lisa Moreira",
+            doctorDesc: "Ophthalmologist",
           ),
-          DoctorListCard(
-            imageName: "doctor9",
-            doctorName: "Tawfiq Bahri",
-            doctorDesc: "Family Doctor, Cardiologist",
-          )
         ],
       ),
     );
@@ -110,7 +106,8 @@ class DoctorListCard extends StatelessWidget {
       child: Material(
           child: InkWell(
               onTap: () {
-                Navigator.of(context).push(timeSlotRoute());
+                Navigator.of(context).push(
+                    timeSlotRoute(Doctor(doctorName, doctorDesc, imageName)));
               },
               child: Padding(
                 padding: const EdgeInsets.all(15),

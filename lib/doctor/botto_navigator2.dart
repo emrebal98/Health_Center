@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:health_center/doctor/doctor.dart';
 import 'package:health_center/doctor/perscription.dart';
-import 'package:health_center/user/pages/appointment_history.dart';
-import 'package:health_center/user/pages/perscription.dart';
 import 'package:health_center/user/pages/setting.dart';
 
 class BottomNavigator2 extends StatefulWidget {
   const BottomNavigator2({Key? key, required this.name});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String name;
 
@@ -32,19 +21,11 @@ class _BottomNavigatorState extends State<BottomNavigator2> {
     });
   }
 
-  // void _createButton(BuildContext context) {
-  //   // Navigator.push(
-  //   //     context, MaterialPageRoute(builder: (context) => AppointmentRoute()));
-  //   Navigator.of(context).push(AppointmentRoute());
-  // }
-
   final List _screens = [
     const DoctorRoute(
       userName: "doc1",
     ),
-    const AppointmentHistoryRoute(),
-    const PerscriptionRoute(),
-    SettingsScreen(),
+    const SettingsScreen(),
   ];
 
   @override
@@ -80,8 +61,8 @@ class _BottomNavigatorState extends State<BottomNavigator2> {
             backgroundColor: Theme.of(context).primaryColor.withAlpha(0),
             currentIndex: _currentIndex,
             type: BottomNavigationBarType.fixed,
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
             unselectedItemColor:
                 Theme.of(context).colorScheme.onBackground.withAlpha(80),
             selectedItemColor: Theme.of(context).colorScheme.onBackground,
@@ -90,16 +71,6 @@ class _BottomNavigatorState extends State<BottomNavigator2> {
                 icon: Icon(Icons.home_rounded),
                 label: "Home",
               ),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.calendar_today_rounded,
-                  ),
-                  label: "Second"),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.wysiwyg_rounded,
-                  ),
-                  label: "Third"),
               BottomNavigationBarItem(
                   icon: Icon(
                     Icons.settings_rounded,

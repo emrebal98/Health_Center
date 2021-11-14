@@ -1,15 +1,12 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-
 import 'package:confetti/confetti.dart';
 import 'package:health_center/helper/hex_color.dart';
-import 'package:health_center/main.dart';
-import 'package:health_center/user/bottom_navigator.dart';
 
 Route successPageRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => SuccessPage(),
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        const SuccessPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(1, 0);
       const end = Offset.zero;
@@ -26,7 +23,7 @@ Route successPageRoute() {
 }
 
 class SuccessPage extends StatefulWidget {
-  SuccessPage({Key? key}) : super(key: key);
+  const SuccessPage({Key? key}) : super(key: key);
 
   @override
   _SuccessPageState createState() => _SuccessPageState();
@@ -76,48 +73,34 @@ class _SuccessPageState extends State<SuccessPage> {
           Center(
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 80,
                 ),
-
                 Image.asset("lib/images/thumbs-up.png"),
-                SizedBox(
+                const SizedBox(
                   height: 80,
                 ),
-                Text(
+                const Text(
                   "Appointment booked successfully",
                   style: TextStyle(
                       fontSize: 24,
                       color: Colors.white,
                       fontWeight: FontWeight.w500),
                 ),
-                // Align(
-                //   alignment: Alignment.centerRight,
-                //   child: TextButton(
-                //       onPressed: () {
-                //         _controllerCenterRight.play();
-                //       },
-                //       child: _display('pump left')),
-                // ),
               ],
             ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               width: double.infinity,
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: HexColor("#00B25B")),
                   onPressed: () {
-                    // Navigator.of(context).pushAndRemoveUntil(
-                    //     MaterialPageRoute(
-                    //         builder: (context) =>
-                    //             BottomNavigator(name: "test")),
-                    //     (route) => false); r
                     Navigator.of(context).popUntil(ModalRoute.withName('/'));
                   },
-                  child: Text(
+                  child: const Text(
                     "Done",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                   )),
@@ -125,13 +108,6 @@ class _SuccessPageState extends State<SuccessPage> {
           )
         ],
       ),
-    );
-  }
-
-  Text _display(String text) {
-    return Text(
-      text,
-      style: const TextStyle(color: Colors.white, fontSize: 20),
     );
   }
 }

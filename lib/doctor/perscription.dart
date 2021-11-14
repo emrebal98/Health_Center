@@ -62,7 +62,7 @@ class PerscriptiontPage extends StatelessWidget {
         ],
       ),
       body: Column(
-        children: SetPerscriptions(patientslist),
+        children: setPerscriptions(patientslist),
       ),
     );
   }
@@ -115,7 +115,7 @@ class Patients {
   Patients(this.imageName, this.patientsName);
 }
 
-List<Widget> SetPerscriptions(List<Patients> list) {
+List<Widget> setPerscriptions(List<Patients> list) {
   int len = list.length;
   // int rowCount = len ~/ 2;
   List<Widget> result = [];
