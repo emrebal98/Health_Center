@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'doctor/botto_navigator2.dart';
 import 'user/bottom_navigator.dart';
 import 'package:flutter/services.dart';
 import 'login.dart';
@@ -59,7 +60,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
                   ),
-                  onPressed: null,
+                  onPressed: () {
+                    runApp(const MyApp(home: BottomNavigator2(name: "doc1")));
+                  },
                   child: const Text("DOCTOR PAGE")),
               TextButton(
                   style: ButtonStyle(
