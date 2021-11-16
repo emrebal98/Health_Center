@@ -93,7 +93,6 @@ class HealthConcernCard extends StatelessWidget {
                           ClipOval(
                             child: Image.asset(
                               "lib/images/" + imageName + ".png",
-                              // height: 50,
                             ),
                           ),
                           Padding(

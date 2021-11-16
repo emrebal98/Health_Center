@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:health_center/helper/hex_color.dart';
 import 'package:health_center/doctor/doctor.dart';
@@ -91,15 +92,27 @@ class PatientsCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0)),
                   child: InkWell(
                       onTap: () {
-                        Navigator.of(context).push(setPerscriptionRoute());
+                        Navigator.of(context)
+                            .push(setPerscriptionRoute(patientsName));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(15),
                         child: Row(children: [
-                          Image.asset("lib/images/" + imageName + ".png"),
+                          ClipOval(
+                            child: Image.asset(
+                              "lib/images/" + imageName + ".png",
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(left: 10),
-                            child: Text(patientsName),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.16,
+                              child: AutoSizeText(
+                                patientsName,
+                                // overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                            ),
                           )
                         ]),
                       ))),

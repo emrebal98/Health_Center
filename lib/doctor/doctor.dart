@@ -129,21 +129,27 @@ class DoctorRoute extends StatelessWidget {
                   ),
                 ),
                 const DividerTitle(
-                  title: "Other Patients",
+                  title: "Next Patients",
                   button: true,
                   top: 5,
                 ),
                 const OtherPatients(
                   imageName: "doctor9.png",
                   patientName: "Emre Erkan",
-                  sex: "Man",
+                  sex: "10 November 2021, 11.30",
                   age: 23,
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 const OtherPatients(
                     imageName: "doctor9.png",
                     patientName: "Samet Sarıal",
-                    sex: "Man",
+                    sex: "10 November 2021, 12.00",
                     age: 23),
+                SizedBox(
+                  height: 40,
+                ),
               ],
             )
           ],

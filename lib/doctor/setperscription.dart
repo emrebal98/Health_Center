@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:health_center/doctor/perscription.dart';
 
-Route setPerscriptionRoute() {
+Route setPerscriptionRoute(String patientName) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => SetPerscription(),
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        SetPerscription(patientName: patientName),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(1, 0);
       const end = Offset.zero;
@@ -20,10 +21,8 @@ Route setPerscriptionRoute() {
 }
 
 class SetPerscription extends StatelessWidget {
-  SetPerscription({
-    Key? key,
-  }) : super(key: key);
-
+  SetPerscription({Key? key, required this.patientName}) : super(key: key);
+  final String patientName;
   final List<Patients> healthConcernList = [
     Patients("", "Emre Erkan"),
     Patients("", "Samet Sarıal"),
@@ -66,17 +65,11 @@ class SetPerscription extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
-                        "Samet ",
+                        patientName,
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text("23, Man",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w300, fontSize: 13))
                     ],
                   ),
                 )
