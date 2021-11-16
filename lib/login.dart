@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:health_center/doctor/bottom_navigator.dart' as doctor_bottom;
 import 'package:health_center/main.dart';
 import 'package:health_center/user/bottom_navigator.dart';
 import 'register.dart';
@@ -23,13 +24,34 @@ class _LoginState extends State<Login> {
           child: Container(
             child: Column(
               children: [
+                const SizedBox(
+                  height: 50,
+                ),
                 Container(
-                  child: SizedBox(
-                    height: 70,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.health_and_safety_outlined,
+                        size: 48,
+                        color: Colors.blue,
+                      ),
+                      Text(
+                        "Health Center",
+                        style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.blue),
+                      )
+                    ],
                   ),
                 ),
+                const SizedBox(
+                  height: 100,
+                ),
                 Padding(
-                  padding: EdgeInsets.all(30.0),
+                  padding: const EdgeInsets.all(30.0),
                   child: Column(
                     children: <Widget>[
                       Visibility(
@@ -42,15 +64,15 @@ class _LoginState extends State<Login> {
                         ),
                         visible: _warningMessage,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Container(
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(
                                   color: Color.fromRGBO(143, 148, 251, .2),
                                   blurRadius: 20.0,
@@ -59,21 +81,21 @@ class _LoginState extends State<Login> {
                         child: Column(
                           children: <Widget>[
                             Container(
-                              padding: EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: const BoxDecoration(
                                   border: Border(
                                       bottom: BorderSide(color: Colors.grey))),
                               child: TextField(
                                 controller: emailController,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: "Email or Phone number",
+                                    hintText: "Email",
                                     hintStyle:
                                         TextStyle(color: Colors.grey[400])),
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: TextField(
                                 obscureText: _isObscure,
                                 controller: passwordController,
@@ -97,7 +119,7 @@ class _LoginState extends State<Login> {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       InkWell(
@@ -108,6 +130,9 @@ class _LoginState extends State<Login> {
                             setState(() {
                               _warningMessage = false;
                             });
+                            runApp(const MyApp(
+                                home: doctor_bottom.BottomNavigator(
+                                    name: "doc1")));
                           } else if (passwordController.text == "123" &&
                               emailController.text == "user") {
                             setState(() {
@@ -125,11 +150,9 @@ class _LoginState extends State<Login> {
                           height: 50,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(colors: [
-                                Color.fromRGBO(143, 148, 251, 1),
-                                Color.fromRGBO(143, 148, 251, .6),
-                              ])),
-                          child: Center(
+                              gradient: const LinearGradient(
+                                  colors: [Colors.blue, Colors.blueAccent])),
+                          child: const Center(
                             child: Text(
                               "Login",
                               style: TextStyle(
@@ -139,25 +162,24 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Register()),
+                            MaterialPageRoute(
+                                builder: (context) => const Register()),
                           );
                         },
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(colors: [
-                                Color.fromRGBO(143, 148, 251, 1),
-                                Color.fromRGBO(143, 148, 251, .6),
-                              ])),
-                          child: Center(
+                              gradient: const LinearGradient(
+                                  colors: [Colors.blue, Colors.blueAccent])),
+                          child: const Center(
                             child: Text(
                               "Register",
                               style: TextStyle(

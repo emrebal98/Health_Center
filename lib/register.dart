@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:health_center/login.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -9,7 +8,6 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  bool _isObscure = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,21 +16,42 @@ class _RegisterState extends State<Register> {
           child: Container(
             child: Column(
               children: [
+                const SizedBox(
+                  height: 50,
+                ),
                 Container(
-                  child: SizedBox(
-                    height: 70,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.health_and_safety_outlined,
+                        size: 48,
+                        color: Colors.blue,
+                      ),
+                      Text(
+                        "Health Center",
+                        style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.blue),
+                      )
+                    ],
                   ),
                 ),
+                const SizedBox(
+                  height: 100,
+                ),
                 Padding(
-                  padding: EdgeInsets.all(30.0),
+                  padding: const EdgeInsets.all(30.0),
                   child: Column(
                     children: <Widget>[
                       Container(
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(
                                   color: Color.fromRGBO(143, 148, 251, .2),
                                   blurRadius: 20.0,
@@ -41,8 +60,8 @@ class _RegisterState extends State<Register> {
                         child: Column(
                           children: <Widget>[
                             Container(
-                              padding: EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: const BoxDecoration(
                                   border: Border(
                                       bottom: BorderSide(color: Colors.grey))),
                               child: TextField(
@@ -54,8 +73,8 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: const BoxDecoration(
                                   border: Border(
                                       bottom: BorderSide(color: Colors.grey))),
                               child: TextField(
@@ -68,8 +87,8 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: const BoxDecoration(
                                   border: Border(
                                       bottom: BorderSide(color: Colors.grey))),
                               child: TextField(
@@ -82,7 +101,7 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: TextField(
                                 obscureText: true,
                                 decoration: InputDecoration(
@@ -95,7 +114,7 @@ class _RegisterState extends State<Register> {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       InkWell(
@@ -106,11 +125,9 @@ class _RegisterState extends State<Register> {
                           height: 50,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(colors: [
-                                Color.fromRGBO(143, 148, 251, 1),
-                                Color.fromRGBO(143, 148, 251, .6),
-                              ])),
-                          child: Center(
+                              gradient: const LinearGradient(
+                                  colors: [Colors.blue, Colors.blueAccent])),
+                          child: const Center(
                             child: Text(
                               "Register",
                               style: TextStyle(
@@ -120,26 +137,21 @@ class _RegisterState extends State<Register> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       InkWell(
                         onTap: () {
                           print("Return to Login");
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Login()),
-                          );
+                          Navigator.of(context).pop();
                         },
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(colors: [
-                                Color.fromRGBO(143, 148, 251, 1),
-                                Color.fromRGBO(143, 148, 251, .6),
-                              ])),
-                          child: Center(
+                              gradient: const LinearGradient(
+                                  colors: [Colors.blue, Colors.blueAccent])),
+                          child: const Center(
                             child: Text(
                               "Return to Login",
                               style: TextStyle(
