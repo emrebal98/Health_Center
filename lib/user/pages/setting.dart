@@ -51,7 +51,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: 'Sign out',
               leading: Icon(Icons.exit_to_app),
               onPressed: (context) {
-                runApp(const MyApp(home: Login()));
+                runApp(MyApp(home: Login()));
               },
             ),
           ],

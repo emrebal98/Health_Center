@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:health_center/doctor/bottom_navigator.dart' as doctor_bottom;
 import 'package:health_center/main.dart';
@@ -123,14 +124,14 @@ class _LoginState extends State<Login> {
                         height: 30,
                       ),
                       InkWell(
-                        onTap: () {
+                        onTap: () async {
                           if (passwordController.text == "123" &&
                               emailController.text == "doctor") {
                             print("doctorrr");
                             setState(() {
                               _warningMessage = false;
                             });
-                            runApp(const MyApp(
+                            runApp(MyApp(
                                 home: doctor_bottom.BottomNavigator(
                                     name: "doc1")));
                           } else if (passwordController.text == "123" &&
@@ -138,7 +139,7 @@ class _LoginState extends State<Login> {
                             setState(() {
                               _warningMessage = false;
                             });
-                            runApp(const MyApp(
+                            runApp(MyApp(
                                 home: BottomNavigator(name: "Test Name")));
                           } else {
                             setState(() {
