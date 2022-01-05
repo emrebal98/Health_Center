@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "309452210066",
+    "project_id": "healthcenter-8ccd5",
+    "storage_bucket": "healthcenter-8ccd5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:309452210066:android:67930b96d3b0343aa18b4b",
+        "android_client_info": {
+          "package_name": "com.example.health_center"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "309452210066-m656lj5lb094nnici6ican77mh7gctnp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs554w40LDSwXjPH9KrPD1I2xEcWFq1Rk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "309452210066-m656lj5lb094nnici6ican77mh7gctnp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

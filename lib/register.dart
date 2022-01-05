@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:health_center/data/add_data.dart';
+import 'package:health_center/data/auth.dart';
+import 'login.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -8,6 +11,19 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  String userType = 'Patient';
+  bool _visibiltyArea = false;
+  final AuthService _authService = AuthService();
+  UserService _userService = UserService();
+
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController fnameController = new TextEditingController();
+  TextEditingController lnameController = new TextEditingController();
+  TextEditingController phoneNumber = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  TextEditingController passwordController2 = new TextEditingController();
+  TextEditingController specialist = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,6 +81,35 @@ class _RegisterState extends State<Register> {
                                   border: Border(
                                       bottom: BorderSide(color: Colors.grey))),
                               child: TextField(
+                                controller: fnameController,
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "First Name",
+                                    hintStyle:
+                                        TextStyle(color: Colors.grey[400])),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: const BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(color: Colors.grey))),
+                              child: TextField(
+                                controller: lnameController,
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Last Name",
+                                    hintStyle:
+                                        TextStyle(color: Colors.grey[400])),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: const BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(color: Colors.grey))),
+                              child: TextField(
+                                controller: emailController,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Email",
@@ -78,6 +123,7 @@ class _RegisterState extends State<Register> {
                                   border: Border(
                                       bottom: BorderSide(color: Colors.grey))),
                               child: TextField(
+                                controller: phoneNumber,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
@@ -92,6 +138,7 @@ class _RegisterState extends State<Register> {
                                   border: Border(
                                       bottom: BorderSide(color: Colors.grey))),
                               child: TextField(
+                                controller: passwordController,
                                 obscureText: true,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
@@ -103,12 +150,62 @@ class _RegisterState extends State<Register> {
                             Container(
                               padding: const EdgeInsets.all(8.0),
                               child: TextField(
+                                controller: passwordController2,
                                 obscureText: true,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "RePassword",
                                     hintStyle:
                                         TextStyle(color: Colors.grey[400])),
+                              ),
+                            ),
+                            Container(
+                                child: Padding(
+                              padding: EdgeInsets.only(left: 5, right: 5),
+                              child: DropdownButton<String>(
+                                hint: Text(userType),
+                                icon: const Icon(Icons.arrow_downward),
+                                elevation: 16,
+                                isExpanded: true,
+                                style:
+                                    const TextStyle(color: Colors.blueAccent),
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.blueAccent,
+                                ),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    userType = newValue!;
+                                    if (newValue == "Patient") {
+                                      _visibiltyArea = false;
+                                    } else {
+                                      _visibiltyArea = true;
+                                    }
+                                  });
+                                },
+                                items: <String>[
+                                  'Patient',
+                                  'Doctor',
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                            )),
+                            Container(
+                              child: Visibility(
+                                child: TextField(
+                                  controller: specialist,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Specialist",
+                                      hintStyle:
+                                          TextStyle(color: Colors.grey[400])),
+                                ),
+                                visible: _visibiltyArea,
                               ),
                             ),
                           ],
@@ -119,7 +216,55 @@ class _RegisterState extends State<Register> {
                       ),
                       InkWell(
                         onTap: () {
-                          print("Container clicked");
+                          if (passwordController.text ==
+                              passwordController2.text) {
+                            if (emailController.text.isEmpty &&
+                                phoneNumber.text.isEmpty) {
+                              print("please fill all fields");
+                            } else {
+                              if (userType == "Patient") {
+                                _authService
+                                    .createUser(
+                                        fnameController.text,
+                                        lnameController.text,
+                                        emailController.text,
+                                        passwordController.text,
+                                        phoneNumber.text,
+                                        userType,
+                                        "patient")
+                                    .then(
+                                  (value) {
+                                    return Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const Login()));
+                                  },
+                                );
+                              } else {
+                                _authService
+                                    .createUser(
+                                        fnameController.text,
+                                        lnameController.text,
+                                        emailController.text,
+                                        passwordController.text,
+                                        phoneNumber.text,
+                                        userType,
+                                        specialist.text)
+                                    .then(
+                                  (value) {
+                                    return Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const Login()));
+                                  },
+                                );
+                              }
+                            }
+                          } else {
+                            print("Password not equals");
+                          }
                         },
                         child: Container(
                           height: 50,
@@ -142,7 +287,6 @@ class _RegisterState extends State<Register> {
                       ),
                       InkWell(
                         onTap: () {
-                          print("Return to Login");
                           Navigator.of(context).pop();
                         },
                         child: Container(
