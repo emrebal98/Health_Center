@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:health_center/data/add_data.dart';
-import 'package:health_center/data/auth.dart';
+import 'package:health_center/model/UserDetail.dart';
+import 'package:health_center/shared/authentication.dart';
+import 'package:health_center/shared/firestore_helper.dart';
 import 'login.dart';
 
 class Register extends StatefulWidget {
@@ -13,8 +14,8 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   String userType = 'Patient';
   bool _visibiltyArea = false;
-  final AuthService _authService = AuthService();
-  UserService _userService = UserService();
+  String _message = "";
+  late String _userId;
 
   TextEditingController emailController = new TextEditingController();
   TextEditingController fnameController = new TextEditingController();
@@ -23,6 +24,52 @@ class _RegisterState extends State<Register> {
   TextEditingController passwordController = new TextEditingController();
   TextEditingController passwordController2 = new TextEditingController();
   TextEditingController specialist = new TextEditingController();
+
+  late Authentication auth;
+  @override
+  void initState() {
+    auth = Authentication();
+    super.initState();
+  }
+
+  Future handleSubmit() async {
+    final UserDetail newEvent = UserDetail(
+        "123",
+        fnameController.text,
+        lnameController.text,
+        emailController.text,
+        passwordController.text,
+        phoneNumber.text,
+        userType,
+        specialist.text);
+
+    if (passwordController.text == passwordController2.text) {
+      if (emailController.text.isEmpty && phoneNumber.text.isEmpty) {
+        print("please fill all fields");
+      } else {
+        if (userType == "Patient") {
+          try {
+            _userId = await auth.signUp(newEvent);
+            print('Sign up for user $_userId');
+          } catch (errorMessage) {
+            print('Error: $errorMessage');
+            setState(() {
+              _message = "This email registered before ";
+            });
+          }
+        } else {
+          try {
+            _userId = await auth.signUp(newEvent);
+            print('Sign up for user $_userId');
+          } catch (errorMessage) {
+            print('Error: $errorMessage');
+          }
+        }
+      }
+    } else {
+      print("Password not equals");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -216,55 +263,7 @@ class _RegisterState extends State<Register> {
                       ),
                       InkWell(
                         onTap: () {
-                          if (passwordController.text ==
-                              passwordController2.text) {
-                            if (emailController.text.isEmpty &&
-                                phoneNumber.text.isEmpty) {
-                              print("please fill all fields");
-                            } else {
-                              if (userType == "Patient") {
-                                _authService
-                                    .createUser(
-                                        fnameController.text,
-                                        lnameController.text,
-                                        emailController.text,
-                                        passwordController.text,
-                                        phoneNumber.text,
-                                        userType,
-                                        "patient")
-                                    .then(
-                                  (value) {
-                                    return Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const Login()));
-                                  },
-                                );
-                              } else {
-                                _authService
-                                    .createUser(
-                                        fnameController.text,
-                                        lnameController.text,
-                                        emailController.text,
-                                        passwordController.text,
-                                        phoneNumber.text,
-                                        userType,
-                                        specialist.text)
-                                    .then(
-                                  (value) {
-                                    return Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const Login()));
-                                  },
-                                );
-                              }
-                            }
-                          } else {
-                            print("Password not equals");
-                          }
+                          handleSubmit();
                         },
                         child: Container(
                           height: 50,
