@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:health_center/doctor/bottom_navigator.dart' as doctor_bottom;
 import 'package:health_center/main.dart';
+import 'package:health_center/model/UserDetail.dart';
+import 'package:health_center/shared/authentication.dart';
+import 'package:health_center/shared/firestore_helper.dart';
 import 'package:health_center/user/bottom_navigator.dart';
 import 'register.dart';
 
@@ -17,6 +20,32 @@ class _LoginState extends State<Login> {
   bool _warningMessage = false;
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
+  List<UserDetail> details = [];
+  late Authentication auth;
+  @override
+  void initState() {
+    auth = Authentication();
+    super.initState();
+  }
+
+  Future submit() async {
+    if (passwordController.text.isEmpty && emailController.text.isEmpty) {
+      setState(() {
+        _warningMessage = true;
+      });
+    } else {
+      var _userEmail =
+          await auth.login(emailController.text, passwordController.text);
+      print('Login for user $_userEmail');
+      await FirestoreHelper.getUserSpeciality(_userEmail).then((data) {
+        print(data[0].userType);
+        setState(() {
+          details = data;
+        });
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,27 +154,7 @@ class _LoginState extends State<Login> {
                       ),
                       InkWell(
                         onTap: () async {
-                          if (passwordController.text == "123" &&
-                              emailController.text == "doctor") {
-                            print("doctorrr");
-                            setState(() {
-                              _warningMessage = false;
-                            });
-                            runApp(MyApp(
-                                home: doctor_bottom.BottomNavigator(
-                                    name: "doc1")));
-                          } else if (passwordController.text == "123" &&
-                              emailController.text == "user") {
-                            setState(() {
-                              _warningMessage = false;
-                            });
-                            runApp(MyApp(
-                                home: BottomNavigator(name: "Test Name")));
-                          } else {
-                            setState(() {
-                              _warningMessage = true;
-                            });
-                          }
+                          submit();
                         },
                         child: Container(
                           height: 50,
