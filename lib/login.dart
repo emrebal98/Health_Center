@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:health_center/doctor/bottom_navigator.dart' as doctor_bottom;
+import 'package:health_center/user/bottom_navigator.dart' as user_bottom;
 import 'package:health_center/main.dart';
 import 'package:health_center/model/UserDetail.dart';
 import 'package:health_center/shared/authentication.dart';
@@ -18,17 +19,20 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   bool _isObscure = true;
   bool _warningMessage = false;
+  late String userType;
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   List<UserDetail> details = [];
   late Authentication auth;
+  late UserDetail userData;
+  late String patientName = "sa";
   @override
   void initState() {
     auth = Authentication();
     super.initState();
   }
 
-  Future submit() async {
+  Future submit(context) async {
     if (passwordController.text.isEmpty && emailController.text.isEmpty) {
       setState(() {
         _warningMessage = true;
@@ -37,12 +41,27 @@ class _LoginState extends State<Login> {
       var _userEmail =
           await auth.login(emailController.text, passwordController.text);
       print('Login for user $_userEmail');
-      await FirestoreHelper.getUserSpeciality(_userEmail).then((data) {
+      await FirestoreHelper.getUserData().then((data) {
         print(data[0].userType);
         setState(() {
+          userData = data[0];
           details = data;
         });
       });
+      if (userData.userType == 'Doctor') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const doctor_bottom.BottomNavigator()),
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  const user_bottom.BottomNavigator(name: "name")),
+        );
+      }
     }
   }
 
@@ -154,7 +173,7 @@ class _LoginState extends State<Login> {
                       ),
                       InkWell(
                         onTap: () async {
-                          submit();
+                          submit(context);
                         },
                         child: Container(
                           height: 50,

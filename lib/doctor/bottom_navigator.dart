@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:health_center/doctor/doctor.dart';
 import 'package:health_center/doctor/perscription.dart';
 import 'package:health_center/doctor/setting.dart';
+import 'package:health_center/model/UserDetail.dart';
+import 'package:health_center/shared/authentication.dart';
+
+import 'package:health_center/shared/firestore_helper.dart';
 
 class BottomNavigator extends StatefulWidget {
-  const BottomNavigator({Key? key, required this.name});
-
-  final String name;
+  const BottomNavigator({Key? key});
 
   @override
   _BottomNavigatorState createState() => _BottomNavigatorState();
@@ -14,6 +16,19 @@ class BottomNavigator extends StatefulWidget {
 
 class _BottomNavigatorState extends State<BottomNavigator> {
   int _currentIndex = 0;
+  late UserDetail userData;
+  late Authentication auth;
+  @override
+  void initState() async {
+    auth = Authentication();
+    await FirestoreHelper.getUserData().then((data) {
+      print(data[0].userType);
+      setState(() {
+        userData = data[0];
+      });
+    });
+    super.initState();
+  }
 
   void _changeTab(index) {
     setState(() {
@@ -23,7 +38,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
 
   final List _screens = [
     const DoctorRoute(
-      userName: "doc1",
+      userName: "asf",
     ),
     const SettingsScreen(),
   ];
