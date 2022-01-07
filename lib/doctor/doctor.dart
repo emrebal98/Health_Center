@@ -3,13 +3,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:health_center/helper/scroll_behavior.dart';
+import 'package:health_center/model/UserDetail.dart';
+import 'package:health_center/shared/authentication.dart';
+import 'package:health_center/shared/firestore_helper.dart';
 import 'package:health_center/user/pages/home.dart';
 import 'package:health_center/helper/hex_color.dart';
 
-class DoctorRoute extends StatelessWidget {
-  const DoctorRoute({Key? key, required this.userName}) : super(key: key);
-  final String userName;
+class DoctorRoute extends StatefulWidget {
+  const DoctorRoute({Key? key}) : super(key: key);
 
+  @override
+  _DoctorRouteState createState() => _DoctorRouteState();
+}
+
+class _DoctorRouteState extends State<DoctorRoute> {
+  late UserDetail userData;
+  late Authentication auth;
+  @override
+  initState() {
+    auth = Authentication();
+    FirestoreHelper.getUserData().then((data) {
+      print(data[0].userType);
+      setState(() {
+        userData = data[0];
+      });
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +70,7 @@ class DoctorRoute extends StatelessWidget {
                         color: Colors.blue,
                       ),
                       Text(
-                        "Hello," + userName,
+                        "Hello," + userData.fname + " " + userData.lname,
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w400),
                       ),

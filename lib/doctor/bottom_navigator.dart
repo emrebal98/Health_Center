@@ -16,19 +16,7 @@ class BottomNavigator extends StatefulWidget {
 
 class _BottomNavigatorState extends State<BottomNavigator> {
   int _currentIndex = 0;
-  late UserDetail userData;
-  late Authentication auth;
-  @override
-  void initState() async {
-    auth = Authentication();
-    await FirestoreHelper.getUserData().then((data) {
-      print(data[0].userType);
-      setState(() {
-        userData = data[0];
-      });
-    });
-    super.initState();
-  }
+  
 
   void _changeTab(index) {
     setState(() {
@@ -37,9 +25,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   }
 
   final List _screens = [
-    const DoctorRoute(
-      userName: "asf",
-    ),
+    const DoctorRoute(),
     const SettingsScreen(),
   ];
 
