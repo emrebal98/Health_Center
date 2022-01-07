@@ -14,6 +14,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   String userType = 'Patient';
   bool _visibiltyArea = false;
+  bool _visibiltyAreaMessage = false;
   String _message = "";
   late String _userId;
 
@@ -32,7 +33,7 @@ class _RegisterState extends State<Register> {
     super.initState();
   }
 
-  Future handleSubmit() async {
+  Future handleSubmit(context) async {
     final UserDetail newEvent = UserDetail(
         "123",
         fnameController.text,
@@ -46,15 +47,24 @@ class _RegisterState extends State<Register> {
     if (passwordController.text == passwordController2.text) {
       if (emailController.text.isEmpty && phoneNumber.text.isEmpty) {
         print("please fill all fields");
+        setState(() {
+          _message = "Please fill all fields";
+          _visibiltyAreaMessage = true;
+        });
       } else {
         if (userType == "Patient") {
           try {
             _userId = await auth.signUp(newEvent);
             print('Sign up for user $_userId');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Login()),
+            );
           } catch (errorMessage) {
             print('Error: $errorMessage');
             setState(() {
               _message = "This email registered before ";
+              _visibiltyAreaMessage = true;
             });
           }
         } else {
@@ -63,11 +73,19 @@ class _RegisterState extends State<Register> {
             print('Sign up for user $_userId');
           } catch (errorMessage) {
             print('Error: $errorMessage');
+            setState(() {
+              _message = "Error";
+              _visibiltyAreaMessage = true;
+            });
           }
         }
       }
     } else {
       print("Password not equals");
+      setState(() {
+        _message = "Password not equals";
+        _visibiltyAreaMessage = true;
+      });
     }
   }
 
@@ -109,6 +127,15 @@ class _RegisterState extends State<Register> {
                   padding: const EdgeInsets.all(30.0),
                   child: Column(
                     children: <Widget>[
+                      Container(
+                        child: Visibility(
+                          child: Text(
+                            _message,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          visible: _visibiltyAreaMessage,
+                        ),
+                      ),
                       Container(
                         padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
@@ -245,7 +272,6 @@ class _RegisterState extends State<Register> {
                               child: Visibility(
                                 child: TextField(
                                   controller: specialist,
-                                  obscureText: true,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: "Specialist",
@@ -263,7 +289,7 @@ class _RegisterState extends State<Register> {
                       ),
                       InkWell(
                         onTap: () {
-                          handleSubmit();
+                          handleSubmit(context);
                         },
                         child: Container(
                           height: 50,

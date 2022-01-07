@@ -14,14 +14,14 @@ class UserDetail {
       this.phone, this.userType, this.speciality);
 
   UserDetail.fromMap(dynamic obj) {
-    id = obj.id;
-    fname = obj["fname"];
-    lname = obj["lname"];
-    email = obj["email"];
-    password = obj["password"];
-    phone = obj["phone"];
-    userType = obj["userType"];
-    speciality = obj["speciality"];
+    id = obj.id.toString();
+    fname = obj.data()["fname"].toString();
+    lname = obj.data()["lname"].toString();
+    email = obj.data()["email"].toString();
+    password = obj.data()["password"].toString();
+    phone = obj.data()["phone"].toString();
+    userType = obj.data()["userType"].toString();
+    speciality = obj.data()["speciality"].toString();
   }
 
   Map<String, dynamic> toMap() {
