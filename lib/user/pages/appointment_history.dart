@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:health_center/helper/hex_color.dart';
 import 'package:health_center/helper/scroll_behavior.dart';
+import 'package:health_center/model/Appointment.dart';
+import 'package:health_center/shared/firestore_helper.dart';
 import 'package:health_center/user/pages/bookAnAppointment/time_slot.dart';
 import 'package:intl/intl.dart';
 
@@ -12,17 +15,21 @@ class AppointmentHistory extends StatefulWidget {
 }
 
 class _AppointmentHistoryState extends State<AppointmentHistory> {
-  List<Appointment> items = [
-    Appointment(DateTime.parse("2021-12-01 10:30:00"), "Tawfiq Bahri",
-        "Surgeon", "doctor1", AppointmentType.pending),
-    Appointment(DateTime.parse("2021-05-14 14:00:00"), "Trashae Hubbard",
-        "Dentist", "doctor2", AppointmentType.cancelled),
-    Appointment(DateTime.parse("2021-03-08 15:00:00"), "Jesus Morugai",
-        "Otorhinolaryngologist", "doctor3", AppointmentType.past),
-    Appointment(DateTime.parse("2021-01-14 16:00:00"), "Lisa Moreira",
-        "Ophthalmologist", "doctor6", AppointmentType.past),
-    Appointment.empty(DateTime.now())
-  ];
+  final FirebaseFirestore db = FirebaseFirestore.instance;
+  List<Appointment> appointments = [];
+
+  @override
+  void initState() {
+    if (mounted) {
+      FirestoreHelper.getMyAppointments().then((data) {
+        print(data);
+        setState(() {
+          appointments = data;
+        });
+      });
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +48,9 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
         body: ScrollConfiguration(
           behavior: MyScrollBehavior(),
           child: ListView.builder(
-            itemCount: items.length,
+            itemCount: appointments.length,
             itemBuilder: (context, index) {
-              final item = items[index];
-
+              final item = appointments[index];
               return AbsorbPointer(
                 absorbing: false,
                 child: Dismissible(
@@ -56,7 +62,7 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
                   onDismissed: (direction) {
                     // Remove the item from the data source.
                     setState(() {
-                      items.removeAt(index);
+                      appointments.removeAt(index);
                     });
                   },
                   confirmDismiss: (DismissDirection direction) async {
@@ -81,7 +87,7 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
                       },
                     );
                   },
-                  direction: item.type == AppointmentType.pending
+                  direction: item.status == "Pending"
                       ? DismissDirection.endToStart
                       : DismissDirection.none,
                   //Swipe side widget
@@ -116,7 +122,7 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
                         ],
                       )),
 
-                  child: item.empty != true
+                  child: appointments.isEmpty != true
                       ? ListTile(
                           title: Padding(
                           padding: const EdgeInsets.only(top: 10),
@@ -131,7 +137,7 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      DateFormat("MMM dd").format(item.date),
+                                      item.time,
                                       style: const TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500),
@@ -140,8 +146,7 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
                                       height: 3,
                                     ),
                                     Text(
-                                      DateFormat("EEE. HH:mm")
-                                          .format(item.date),
+                                      item.date,
                                       style: const TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w300),
@@ -166,9 +171,7 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
                                         children: [
                                           ClipOval(
                                             child: Image.asset(
-                                              "lib/images/" +
-                                                  item.doctorImage +
-                                                  ".png",
+                                              "lib/images/doctor2.png",
                                               height: 60,
                                             ),
                                           ),
@@ -182,7 +185,7 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                item.doctorName,
+                                                item.doctorEmail,
                                                 style: const TextStyle(
                                                     fontSize: 15,
                                                     fontWeight:
@@ -192,7 +195,7 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
                                                 height: 4,
                                               ),
                                               Text(
-                                                item.doctorDesc,
+                                                item.doctorSpeciality,
                                                 style: const TextStyle(
                                                     fontSize: 13,
                                                     fontWeight:
@@ -203,24 +206,22 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
                                                     top: 10),
                                                 child: Text(
                                                   "*" +
-                                                      item.type
+                                                      item.status
                                                           .toString()
                                                           .split(".")
                                                           .last[0]
                                                           .toUpperCase() +
-                                                      item.type
+                                                      item.status
                                                           .toString()
                                                           .split(".")
                                                           .last
                                                           .substring(1),
                                                   style: TextStyle(
-                                                      color: item.type ==
-                                                              AppointmentType
-                                                                  .cancelled
+                                                      color: item.status ==
+                                                              "Cancalled"
                                                           ? Colors.red
-                                                          : item.type ==
-                                                                  AppointmentType
-                                                                      .pending
+                                                          : item.status ==
+                                                                  "Pending"
                                                               ? Colors.green
                                                               : Colors.grey,
                                                       fontSize: 14,
@@ -235,9 +236,10 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
                                                   onPressed: () {
                                                     Navigator.of(context).push(
                                                         timeSlotRoute(Doctor(
-                                                            item.doctorName,
-                                                            item.doctorDesc,
-                                                            item.doctorImage)));
+                                                            item.doctorEmail,
+                                                            item.doctorSpeciality,
+                                                            "doctor2",
+                                                            item.doctorEmail)));
                                                   },
                                                   style: TextButton.styleFrom(
                                                       padding: EdgeInsets.zero),
@@ -270,21 +272,4 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
 }
 
 //Class for appointment list
-enum AppointmentType { cancelled, pending, past }
 
-class Appointment {
-  DateTime date;
-  String doctorName;
-  String doctorImage;
-  String doctorDesc;
-  AppointmentType type;
-  bool? empty;
-  Appointment(
-      this.date, this.doctorName, this.doctorDesc, this.doctorImage, this.type);
-  Appointment.empty(this.date,
-      {this.doctorName = "",
-      this.empty = true,
-      this.doctorDesc = "",
-      this.doctorImage = "",
-      this.type = AppointmentType.cancelled});
-}

@@ -4,6 +4,8 @@ import 'package:health_center/user/pages/bookAnAppointment/doctor_list.dart';
 import 'package:health_center/user/pages/home.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
+// this page uselesss
+
 Route appointmentRoute() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => AppointmentPage(),

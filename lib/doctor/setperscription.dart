@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:health_center/doctor/perscription.dart';
+import 'package:health_center/model/Perscription.dart';
+import 'package:health_center/model/UserDetail.dart';
+import 'package:health_center/shared/firestore_helper.dart';
 
-Route setPerscriptionRoute(String patientName) {
+Route setPerscriptionRoute(String patientName, String patientMail) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
-        SetPerscription(patientName: patientName),
+        SetPerscription(patientName: patientName, patientMail: patientMail),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(1, 0);
       const end = Offset.zero;
@@ -20,13 +23,42 @@ Route setPerscriptionRoute(String patientName) {
   );
 }
 
-class SetPerscription extends StatelessWidget {
-  SetPerscription({Key? key, required this.patientName}) : super(key: key);
+class SetPerscription extends StatefulWidget {
+  const SetPerscription(
+      {Key? key, required this.patientName, required this.patientMail})
+      : super(key: key);
   final String patientName;
-  final List<Patients> healthConcernList = [
-    Patients("", "Emre Erkan"),
-    Patients("", "Samet Sarıal"),
-  ];
+  final String patientMail;
+  @override
+  _SetPerscriptionState createState() => _SetPerscriptionState();
+}
+
+class _SetPerscriptionState extends State<SetPerscription> {
+  UserDetail? userData = UserDetail("id", "fname", "lname", "email", "password",
+      "phone", "userType", "speciality");
+
+  TextEditingController setPerscription = new TextEditingController();
+
+  @override
+  initState() {
+    try {
+      FirestoreHelper.getUserData().then((data) {
+        print(data[0].userType);
+        setState(() {
+          userData = data[0];
+        });
+      });
+    } catch (error) {
+      print(error);
+      setState(() {
+        userData = UserDetail("id", "fname", "lname", "email", "password",
+            "phone", "userType", "speciality");
+      });
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +99,7 @@ class SetPerscription extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        patientName,
+                        widget.patientName,
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -84,8 +116,9 @@ class SetPerscription extends StatelessWidget {
               ),
               height: 150,
               color: Colors.white,
-              child: const TextField(
+              child: TextField(
                 maxLines: 10,
+                controller: setPerscription,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Set Perscription",
@@ -94,6 +127,21 @@ class SetPerscription extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: () {
               print('add perscription');
+              if (setPerscription.text.isEmpty) {
+                print("please add perscription description");
+              } else {
+                try {
+                  final Perscription newPerscription = Perscription(
+                      "code",
+                      userData!.email,
+                      userData!.speciality,
+                      widget.patientMail,
+                      "description");
+                  FirestoreHelper.addNewPercription(newPerscription);
+                } catch (errorMessage) {
+                  print('Error: $errorMessage');
+                }
+              }
             },
             icon: const Icon(Icons.add, size: 18),
             label: const Text('Add Perscription'),
@@ -106,7 +154,10 @@ class SetPerscription extends StatelessWidget {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
             ),
           ),
-          const PreviousPerscription(),
+          Expanded(
+            flex: 4,
+            child: PreviousPerscription(patientMail: widget.patientMail),
+          )
         ],
       ),
     );
@@ -114,170 +165,83 @@ class SetPerscription extends StatelessWidget {
 }
 
 class PreviousPerscription extends StatefulWidget {
-  const PreviousPerscription({Key? key}) : super(key: key);
-
+  const PreviousPerscription({Key? key, required this.patientMail})
+      : super(key: key);
+  final String patientMail;
   @override
   _PreviousPerscriptionState createState() => _PreviousPerscriptionState();
 }
 
 class _PreviousPerscriptionState extends State<PreviousPerscription> {
+  List<Perscription> perscriptions = [];
+
+  @override
+  void initState() {
+    if (mounted) {
+      FirestoreHelper.getPatientPerscription(widget.patientMail).then((data) {
+        print(data);
+        setState(() {
+          perscriptions = data;
+        });
+      });
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(
-              border: Border(
-            bottom: BorderSide(width: 1, color: Colors.black.withAlpha(20)),
-          )),
-          height: 100,
-          child: Material(
-              child: InkWell(
-                  onTap: () {
-                    print("clicked");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Row(children: [
-                      Image.asset("lib/images/doctor2.png"),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Samet",
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text("x adet Y, z adet Q",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w300, fontSize: 13))
-                          ],
-                        ),
-                      )
-                    ]),
-                  ))),
-        ),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(
-              border: Border(
-            bottom: BorderSide(width: 1, color: Colors.black.withAlpha(20)),
-          )),
-          height: 100,
-          child: Material(
-              child: InkWell(
-                  onTap: () {
-                    print("clicked");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Row(children: [
-                      Image.asset("lib/images/doctor2.png"),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Samet",
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text("x adet Y, z adet Q",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w300, fontSize: 13))
-                          ],
-                        ),
-                      )
-                    ]),
-                  ))),
-        ),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(
-              border: Border(
-            bottom: BorderSide(width: 1, color: Colors.black.withAlpha(20)),
-          )),
-          height: 100,
-          child: Material(
-              child: InkWell(
-                  onTap: () {
-                    print("clicked");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Row(children: [
-                      Image.asset("lib/images/doctor2.png"),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Samet",
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text("x adet Y, z adet Q",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w300, fontSize: 13))
-                          ],
-                        ),
-                      )
-                    ]),
-                  ))),
-        ),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(
-              border: Border(
-            bottom: BorderSide(width: 1, color: Colors.black.withAlpha(20)),
-          )),
-          height: 100,
-          child: Material(
-              child: InkWell(
-                  onTap: () {
-                    // print("clicked");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Row(children: [
-                      Image.asset("lib/images/doctor2.png"),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Samet",
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text("x adet Y, z adet Q",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w300, fontSize: 13))
-                          ],
-                        ),
-                      )
-                    ]),
-                  ))),
-        )
-      ],
-    );
+    if (perscriptions.isEmpty) {
+      return Container(
+        child: Text("There is no pre perscription"),
+      );
+    } else {
+      return Expanded(
+          flex: 4,
+          child: ListView.builder(
+              itemCount: perscriptions.length,
+              itemBuilder: (context, position) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                      border: Border(
+                    bottom:
+                        BorderSide(width: 1, color: Colors.black.withAlpha(20)),
+                  )),
+                  height: 100,
+                  child: Material(
+                      child: InkWell(
+                          onTap: () {
+                            print("clicked");
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Row(children: [
+                              Image.asset("lib/images/doctor2.png"),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 15),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      perscriptions[position].patientMail,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(perscriptions[position].description,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 13))
+                                  ],
+                                ),
+                              )
+                            ]),
+                          ))),
+                );
+              }));
+    }
   }
 }

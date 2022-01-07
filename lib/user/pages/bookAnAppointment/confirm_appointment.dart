@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:health_center/model/Appointment.dart';
+import 'package:health_center/model/UserDetail.dart';
+import 'package:health_center/shared/firestore_helper.dart';
+import 'package:health_center/user/pages/bookAnAppointment/time_slot.dart';
 import 'package:health_center/user/pages/messagesPages/success_page.dart';
 import 'package:intl/intl.dart';
 
-Route confirmAppointmentRoute(DateTime date) {
+Route confirmAppointmentRoute(DateTime date, Doctor doctor) {
   final DateTime _date = date;
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
-        ConfirmAppointmentPage(date: _date),
+        ConfirmAppointmentPage(date: _date, doctor: doctor),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(1, 0);
       const end = Offset.zero;
@@ -22,18 +26,49 @@ Route confirmAppointmentRoute(DateTime date) {
   );
 }
 
+void confirmButton(context, doctorMail, date, time, speciality, patientMail) {
+  try {
+    final Appointment newAppointment =
+        Appointment(date, doctorMail, speciality, patientMail, time, "Pending");
+    FirestoreHelper.addNewAppointment(newAppointment);
+  } catch (errorMessage) {
+    print('Error: $errorMessage');
+  }
+  Navigator.of(context).push(successPageRoute());
+}
+
 class ConfirmAppointmentPage extends StatefulWidget {
-  const ConfirmAppointmentPage({Key? key, required this.date})
+  const ConfirmAppointmentPage(
+      {Key? key, required this.date, required this.doctor})
       : super(key: key);
 
   final DateTime date;
+  final Doctor? doctor;
+
   @override
   _ConfirmAppointmentState createState() => _ConfirmAppointmentState();
 }
 
 class _ConfirmAppointmentState extends State<ConfirmAppointmentPage> {
+  UserDetail? userData = UserDetail("id", "fname", "lname", "email", "password",
+      "phone", "userType", "speciality");
   @override
-  void initState() {
+  initState() {
+    try {
+      FirestoreHelper.getUserData().then((data) {
+        print(data[0].userType);
+        setState(() {
+          userData = data[0];
+        });
+      });
+    } catch (error) {
+      print(error);
+      setState(() {
+        userData = UserDetail("id", "fname", "lname", "email", "password",
+            "phone", "userType", "speciality");
+      });
+    }
+
     super.initState();
   }
 
@@ -76,9 +111,9 @@ class _ConfirmAppointmentState extends State<ConfirmAppointmentPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Text(
-                              "Tawfiq Bahri",
+                              widget.doctor!.name,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ],
@@ -95,6 +130,10 @@ class _ConfirmAppointmentState extends State<ConfirmAppointmentPage> {
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InfoCard(
+                        title: "Doctor Email",
+                        desc: widget.doctor!.email,
+                      ),
+                      InfoCard(
                         title: "Date",
                         desc: DateFormat('dd.MM.yyyy').format(widget.date),
                       ),
@@ -102,14 +141,17 @@ class _ConfirmAppointmentState extends State<ConfirmAppointmentPage> {
                         title: "Time",
                         desc: DateFormat('HH:mm').format(widget.date),
                       ),
-                      const InfoCard(
+                      InfoCard(
                         title: "Health Concern",
-                        desc: "Physiotherapy",
+                        desc: widget.doctor!.desc,
                       ),
-                      const InfoCard(
-                        title: "This appointment for:",
-                        desc: "Full Name",
-                      ),
+                      InfoCard(
+                          title: "This appointment for:",
+                          desc: userData!.fname +
+                              " " +
+                              userData!.lname +
+                              " - " +
+                              userData!.email),
                     ],
                   ),
                 ),
@@ -123,7 +165,13 @@ class _ConfirmAppointmentState extends State<ConfirmAppointmentPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(successPageRoute());
+                      confirmButton(
+                          context,
+                          widget.doctor!.email,
+                          DateFormat('dd.MM.yyyy').format(widget.date),
+                          DateFormat('HH:mm').format(widget.date),
+                          widget.doctor!.desc,
+                          userData!.email);
                     },
                     child: const Text(
                       "Confirm",
