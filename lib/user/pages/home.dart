@@ -2,10 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:health_center/helper/hex_color.dart';
 import 'package:health_center/helper/scroll_behavior.dart';
+import 'package:health_center/model/UserDetail.dart';
+import 'package:health_center/shared/authentication.dart';
+import 'package:health_center/shared/firestore_helper.dart';
 
-class HomeRoute extends StatelessWidget {
-  const HomeRoute({Key? key, required this.userName}) : super(key: key);
-  final String userName;
+class HomeRoute extends StatefulWidget {
+  const HomeRoute({Key? key}) : super(key: key);
+
+  @override
+  _HomeRouteState createState() => _HomeRouteState();
+}
+
+class _HomeRouteState extends State<HomeRoute> {
+  UserDetail? userData = UserDetail("id", "fname", "lname", "email", "password",
+      "phone", "userType", "speciality");
+  @override
+  initState() {
+    try {
+      FirestoreHelper.getUserData().then((data) {
+        print(data[0].userType);
+        setState(() {
+          userData = data[0];
+        });
+      });
+    } catch (error) {
+      print(error);
+      setState(() {
+        userData = UserDetail("id", "fname", "lname", "email", "password",
+            "phone", "userType", "speciality");
+      });
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +75,7 @@ class HomeRoute extends StatelessWidget {
                           color: Colors.blue,
                         ),
                         Text(
-                          "Hello, " + userName,
+                          "Hello, " + userData!.fname + " " + userData!.lname,
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w400),
                         )

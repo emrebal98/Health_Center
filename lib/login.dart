@@ -37,7 +37,7 @@ class _LoginState extends State<Login> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => const doctor_bottom.BottomNavigator()),
+          builder: (context) => const user_bottom.BottomNavigator()),
     );
     if (passwordController.text.isEmpty && emailController.text.isEmpty) {
       setState(() {
@@ -64,8 +64,7 @@ class _LoginState extends State<Login> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  const user_bottom.BottomNavigator(name: "name")),
+              builder: (context) => const user_bottom.BottomNavigator()),
         );
       }
     }

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:health_center/user/pages/bookAnAppointment/appointment.dart';
+import 'package:health_center/user/pages/bookAnAppointment/doctor_list.dart';
 import 'package:health_center/user/pages/home.dart';
 import 'package:health_center/user/pages/appointment_history.dart';
 import 'package:health_center/user/pages/perscription.dart';
 import 'package:health_center/user/pages/setting.dart';
 
 class BottomNavigator extends StatefulWidget {
-  const BottomNavigator({Key? key, required this.name});
-
-  final String name;
-
+  const BottomNavigator({Key? key});
   @override
   _BottomNavigatorState createState() => _BottomNavigatorState();
 }
@@ -24,9 +22,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   }
 
   final List _screens = [
-    const HomeRoute(
-      userName: "Test Name",
-    ),
+    const HomeRoute(),
     const AppointmentHistory(),
     const PrescriptionHistory(),
     const SettingsScreen(),
@@ -47,7 +43,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
             highlightColor: Colors.transparent),
         child: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).push(appointmentRoute());
+            Navigator.of(context).push(doctorListRoute());
           },
           child: const Icon(Icons.add),
         ),

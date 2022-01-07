@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:health_center/helper/hex_color.dart';
 import 'package:health_center/doctor/doctor.dart';
 import 'package:health_center/doctor/setperscription.dart';
+import 'package:health_center/model/UserDetail.dart';
+import 'package:health_center/shared/authentication.dart';
+import 'package:health_center/shared/firestore_helper.dart';
 
 Route perscriptionRoute() {
   return PageRouteBuilder(
@@ -23,13 +26,32 @@ Route perscriptionRoute() {
   );
 }
 
-class PerscriptiontPage extends StatelessWidget {
-  PerscriptiontPage({Key? key}) : super(key: key);
+class PerscriptiontPage extends StatefulWidget {
+  const PerscriptiontPage({Key? key}) : super(key: key);
 
-  final List<Patients> patientslist = [
-    Patients("", "Emre Erkan"),
-    Patients("", "Samet Sarıal"),
+  @override
+  _PerscriptiontPageState createState() => _PerscriptiontPageState();
+}
+
+class _PerscriptiontPageState extends State<PerscriptiontPage> {
+  late List<UserDetail> patientslist = [
+    UserDetail("id", "fname", "lname", "email", "password", "phone", "userType",
+        "speciality"),
+    UserDetail("id", "fname", "lname", "email", "password", "phone", "userType",
+        "speciality")
   ];
+  late Authentication auth;
+  @override
+  initState() {
+    auth = Authentication();
+    FirestoreHelper.getPatient().then((data) {
+      setState(() {
+        patientslist = data;
+      });
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +96,10 @@ class PatientsCard extends StatelessWidget {
       {Key? key,
       required this.imageName,
       required this.patientsName,
+      required this.patientMail,
       this.empty = false})
       : super(key: key);
-  final String imageName, patientsName;
+  final String imageName, patientsName, patientMail;
   final bool empty;
   @override
   Widget build(BuildContext context) {
@@ -92,8 +115,8 @@ class PatientsCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0)),
                   child: InkWell(
                       onTap: () {
-                        Navigator.of(context)
-                            .push(setPerscriptionRoute(patientsName));
+                        Navigator.of(context).push(
+                            setPerscriptionRoute(patientsName, patientMail));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(15),
@@ -122,13 +145,7 @@ class PatientsCard extends StatelessWidget {
   }
 }
 
-class Patients {
-  String imageName;
-  String patientsName;
-  Patients(this.imageName, this.patientsName);
-}
-
-List<Widget> setPerscriptions(List<Patients> list) {
+List<Widget> setPerscriptions(List<UserDetail> list) {
   int len = list.length;
   // int rowCount = len ~/ 2;
   List<Widget> result = [];
@@ -141,29 +158,17 @@ List<Widget> setPerscriptions(List<Patients> list) {
   ));
 
   //Health Concern Cards
-  for (var i = 0; i < len; i += 2) {
+  for (var i = 0; i < len; i += 1) {
     result.add(Padding(
       padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           PatientsCard(
-            imageName: i < len
-                ? list[i].imageName.isNotEmpty
-                    ? list[i].imageName
-                    : "doctor9"
-                : "",
-            patientsName: i < len ? list[i].patientsName : "",
+            imageName: "doctor9",
+            patientsName: list[i].fname + " " + list[i].lname,
+            patientMail: list[i].email,
             empty: !(i < len),
-          ),
-          PatientsCard(
-            imageName: i + 1 < len
-                ? list[i + 1].imageName.isNotEmpty
-                    ? list[i + 1].imageName
-                    : "doctor9"
-                : "",
-            patientsName: i + 1 < len ? list[i + 1].patientsName : "",
-            empty: !(i + 1 < len),
           ),
         ],
       ),

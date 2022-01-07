@@ -174,7 +174,7 @@ class _TimeSlotState extends State<TimeSlotPage> {
                   ),
                 )),
             Column(
-              children: getTimeCards(timeSlotList),
+              children: getTimeCards(timeSlotList, widget.doctor),
             ),
           ],
         ));
@@ -183,9 +183,10 @@ class _TimeSlotState extends State<TimeSlotPage> {
 
 //Time Card
 class TimeCard extends StatelessWidget {
-  const TimeCard({Key? key, required this.time, this.enabled = true})
+  const TimeCard(
+      {Key? key, required this.time, this.enabled = true, required this.doctor})
       : super(key: key);
-
+  final Doctor doctor;
   final String time;
   final bool enabled;
   @override
@@ -207,7 +208,8 @@ class TimeCard extends StatelessWidget {
                       hours: int.parse(time.split(":").first),
                       minutes: int.parse(time.split(":").last)));
 
-                  Navigator.of(context).push(confirmAppointmentRoute(newDate));
+                  Navigator.of(context)
+                      .push(confirmAppointmentRoute(newDate, doctor));
                 }
               : null,
           splashColor: enabled ? null : Colors.transparent,
@@ -234,7 +236,7 @@ class TimeObject {
 }
 
 //Get Time Cards
-List<Widget> getTimeCards(List<TimeObject> list) {
+List<Widget> getTimeCards(List<TimeObject> list, Doctor doctor) {
   List<Widget> result = [];
   int len = list.length;
   for (var i = 0; i < len; i += 4) {
@@ -252,24 +254,28 @@ List<Widget> getTimeCards(List<TimeObject> list) {
                 ? TimeCard(
                     time: t1.time,
                     enabled: t1.enable,
+                    doctor: doctor,
                   )
                 : Expanded(child: Container()),
             !t2.empty
                 ? TimeCard(
                     time: t2.time,
                     enabled: t2.enable,
+                    doctor: doctor,
                   )
                 : Expanded(child: Container()),
             !t3.empty
                 ? TimeCard(
                     time: t3.time,
                     enabled: t3.enable,
+                    doctor: doctor,
                   )
                 : Expanded(child: Container()),
             !t4.empty
                 ? TimeCard(
                     time: t4.time,
                     enabled: t4.enable,
+                    doctor: doctor,
                   )
                 : Expanded(child: Container()),
           ],
@@ -286,5 +292,6 @@ class Doctor {
   String name;
   String desc;
   String imageName;
-  Doctor(this.name, this.desc, this.imageName);
+  String email;
+  Doctor(this.name, this.desc, this.imageName, this.email);
 }

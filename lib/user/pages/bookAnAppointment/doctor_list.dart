@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:health_center/model/UserDetail.dart';
+import 'package:health_center/shared/authentication.dart';
+import 'package:health_center/shared/firestore_helper.dart';
 import 'package:health_center/user/pages/bookAnAppointment/time_slot.dart';
 import 'package:health_center/user/pages/home.dart';
 
@@ -21,15 +24,37 @@ Route doctorListRoute() {
   );
 }
 
-class DoctorListPage extends StatelessWidget {
+class DoctorListPage extends StatefulWidget {
   const DoctorListPage({Key? key}) : super(key: key);
+
+  @override
+  _DoctorListPageState createState() => _DoctorListPageState();
+}
+
+class _DoctorListPageState extends State<DoctorListPage> {
+  late List<UserDetail> doctors = [
+    UserDetail("id", "fname", "lname", "email", "password", "phone", "userType",
+        "speciality")
+  ];
+  late Authentication auth;
+  @override
+  initState() {
+    auth = Authentication();
+    FirestoreHelper.getDoctors().then((data) {
+      setState(() {
+        doctors = data;
+      });
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Doctors",
+          "Select Doctor",
           style: TextStyle(
               color: Colors.black, fontSize: 18, fontWeight: FontWeight.w400),
         ),
@@ -55,31 +80,18 @@ class DoctorListPage extends StatelessWidget {
           )
         ],
       ),
-      body: ListView(
-        children: const [
-          DividerTitle(title: "Choose a Doctor", button: false),
-          DoctorListCard(
-            imageName: "doctor1",
-            doctorName: "Tawfiq Bahri",
-            doctorDesc: "Surgeon",
-          ),
-          DoctorListCard(
-            imageName: "doctor2",
-            doctorName: "Trashae Hubbard",
-            doctorDesc: "Dentist",
-          ),
-          DoctorListCard(
-            imageName: "doctor3",
-            doctorName: "Jesus Morugai",
-            doctorDesc: "Otorhinolaryngologist",
-          ),
-          DoctorListCard(
-            imageName: "doctor6",
-            doctorName: "Lisa Moreira",
-            doctorDesc: "Ophthalmologist",
-          ),
-        ],
-      ),
+      body: ListView.builder(
+          itemCount: doctors.length,
+          itemBuilder: (context, position) {
+            return DoctorListCard(
+              imageName: "doctor1",
+              doctorMail: doctors[position].email,
+              doctorName:
+                  doctors[position].fname + " " + doctors[position].lname,
+              doctorDesc: doctors[position].speciality,
+              
+            );
+          }),
     );
   }
 }
@@ -90,10 +102,11 @@ class DoctorListCard extends StatelessWidget {
       {Key? key,
       required this.imageName,
       required this.doctorName,
+      required this.doctorMail,
       required this.doctorDesc})
       : super(key: key);
 
-  final String imageName, doctorName, doctorDesc;
+  final String imageName, doctorName, doctorDesc, doctorMail;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -106,8 +119,8 @@ class DoctorListCard extends StatelessWidget {
       child: Material(
           child: InkWell(
               onTap: () {
-                Navigator.of(context).push(
-                    timeSlotRoute(Doctor(doctorName, doctorDesc, imageName)));
+                Navigator.of(context).push(timeSlotRoute(
+                    Doctor(doctorName, doctorDesc, imageName, doctorMail)));
               },
               child: Padding(
                 padding: const EdgeInsets.all(15),

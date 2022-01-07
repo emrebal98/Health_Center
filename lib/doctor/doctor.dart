@@ -17,7 +17,8 @@ class DoctorRoute extends StatefulWidget {
 }
 
 class _DoctorRouteState extends State<DoctorRoute> {
-  late UserDetail userData;
+  UserDetail userData = UserDetail("id", "fname", "lname", "email", "password",
+      "phone", "userType", "speciality");
   late Authentication auth;
   @override
   initState() {
