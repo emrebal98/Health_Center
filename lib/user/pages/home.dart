@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:health_center/helper/hex_color.dart';
 import 'package:health_center/helper/scroll_behavior.dart';
+import 'package:health_center/model/Appointment.dart';
 import 'package:health_center/model/UserDetail.dart';
 import 'package:health_center/shared/authentication.dart';
 import 'package:health_center/shared/firestore_helper.dart';
+import 'package:intl/intl.dart';
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
@@ -16,6 +18,34 @@ class HomeRoute extends StatefulWidget {
 class _HomeRouteState extends State<HomeRoute> {
   UserDetail? userData = UserDetail("id", "fname", "lname", "email", "password",
       "phone", "userType", "speciality");
+
+  Appointment? nextAppointment;
+  UserDetail? nextDoctor;
+  List<UserDetail> visitedDoctors = [];
+
+  void updateNextAppointment() {
+    setState(() {
+      FirestoreHelper.getNextAppointment().then((value) {
+        nextAppointment = value;
+        getDoctor(value.doctorEmail);
+      });
+    });
+  }
+
+  void getDoctor(String doctorEmail) {
+    FirestoreHelper.getUser(doctorEmail)
+        .then((value) => setState(() => nextDoctor = value));
+  }
+
+  void getVisitedDoctors() {
+    FirestoreHelper.getPastAppointments().then((value) {
+      for (var appointment in value) {
+        FirestoreHelper.getUser(appointment.doctorEmail)
+            .then((doctor) => setState(() => visitedDoctors.add(doctor)));
+      }
+    });
+  }
+
   @override
   initState() {
     try {
@@ -32,8 +62,20 @@ class _HomeRouteState extends State<HomeRoute> {
             "phone", "userType", "speciality");
       });
     }
+    if (mounted) {
+      updateNextAppointment();
+      getVisitedDoctors();
+    }
 
     super.initState();
+  }
+
+  /// Returns the difference (in full days) between the provided date and today.
+  int calculateDifference(DateTime date) {
+    DateTime now = DateTime.now();
+    return DateTime(date.year, date.month, date.day)
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
   }
 
   @override
@@ -101,15 +143,33 @@ class _HomeRouteState extends State<HomeRoute> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Tomorrow",
+                          Text(
+                            nextAppointment != null
+                                ? (calculateDifference(DateTime.parse(
+                                            nextAppointment!.date)) ==
+                                        0
+                                    ? "Today"
+                                    : calculateDifference(DateTime.parse(
+                                                nextAppointment!.date)) ==
+                                            1
+                                        ? "Tomorrow"
+                                        : calculateDifference(DateTime.parse(
+                                                    nextAppointment!.date))
+                                                .toString() +
+                                            " Days Remaining")
+                                : "Loading...",
                             style: TextStyle(color: Colors.white, fontSize: 24),
                           ),
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text(
-                            "01 December 2021, 10:30",
+                          Text(
+                            nextAppointment != null
+                                ? DateFormat("dd MMM yyyy").format(
+                                        DateTime.parse(nextAppointment!.date)) +
+                                    " " +
+                                    nextAppointment!.time
+                                : "Loading...",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -136,9 +196,11 @@ class _HomeRouteState extends State<HomeRoute> {
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: const [
+                                    children: [
                                       Text(
-                                        "Tawfiq Bahri",
+                                        nextDoctor != null
+                                            ? nextDoctor!.fname
+                                            : "Loading...",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w400),
@@ -147,7 +209,9 @@ class _HomeRouteState extends State<HomeRoute> {
                                         height: 5,
                                       ),
                                       Text(
-                                        "Surgeon",
+                                        nextAppointment != null
+                                            ? nextAppointment!.doctorSpeciality
+                                            : "Loading...",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 12,
@@ -173,24 +237,14 @@ class _HomeRouteState extends State<HomeRoute> {
                       height: 160,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
-                        children: const [
-                          DoctorCard(
-                              imageName: "doctor1",
-                              doctorName: "Tawfiq Bahri",
-                              doctorDesc: "Surgeon"),
-                          DoctorCard(
-                              imageName: "doctor2",
-                              doctorName: "Trashae Hubbard",
-                              doctorDesc: "Dentist"),
-                          DoctorCard(
-                              imageName: "doctor3",
-                              doctorName: "Jesus Moruga",
-                              doctorDesc: "Otorhinolaryngologist"),
-                          DoctorCard(
-                              imageName: "doctor6",
-                              doctorName: "Lisa Moreira",
-                              doctorDesc: "Ophthalmologist")
-                        ],
+                        children: visitedDoctors
+                            .map(
+                              (doctor) => DoctorCard(
+                                  imageName: "doctor1",
+                                  doctorName: doctor.fname,
+                                  doctorDesc: doctor.speciality),
+                            )
+                            .toList(),
                       ),
                     ),
                   ),
