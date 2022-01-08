@@ -61,6 +61,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -89,7 +90,6 @@ class _DoctorListPageState extends State<DoctorListPage> {
               doctorName:
                   doctors[position].fname + " " + doctors[position].lname,
               doctorDesc: doctors[position].speciality,
-              
             );
           }),
     );
@@ -119,6 +119,7 @@ class DoctorListCard extends StatelessWidget {
       child: Material(
           child: InkWell(
               onTap: () {
+                //!
                 Navigator.of(context).push(timeSlotRoute(
                     Doctor(doctorName, doctorDesc, imageName, doctorMail)));
               },

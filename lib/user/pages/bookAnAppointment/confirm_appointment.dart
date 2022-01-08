@@ -84,6 +84,7 @@ class _ConfirmAppointmentState extends State<ConfirmAppointmentPage> {
           centerTitle: true,
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
+          elevation: 0,
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -168,7 +169,7 @@ class _ConfirmAppointmentState extends State<ConfirmAppointmentPage> {
                       confirmButton(
                           context,
                           widget.doctor!.email,
-                          DateFormat('dd.MM.yyyy').format(widget.date),
+                          DateFormat('yyyy-MM-dd').format(widget.date),
                           DateFormat('HH:mm').format(widget.date),
                           widget.doctor!.desc,
                           userData!.email);

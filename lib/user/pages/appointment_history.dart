@@ -62,7 +62,8 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
                   onDismissed: (direction) {
                     // Remove the item from the data source.
                     setState(() {
-                      appointments.removeAt(index);
+                      appointments[index].status = "Cancelled";
+                      FirestoreHelper.updateAppointment(appointments[index]);
                     });
                   },
                   confirmDismiss: (DismissDirection direction) async {
@@ -218,7 +219,7 @@ class _AppointmentHistoryState extends State<AppointmentHistory> {
                                                           .substring(1),
                                                   style: TextStyle(
                                                       color: item.status ==
-                                                              "Cancalled"
+                                                              "Cancelled"
                                                           ? Colors.red
                                                           : item.status ==
                                                                   "Pending"

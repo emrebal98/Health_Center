@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Appointment {
+  late String id;
   late String date;
   late String doctorEmail;
   late String doctorSpeciality;
@@ -12,6 +13,7 @@ class Appointment {
       this.patientEmail, this.time, this.status);
 
   Appointment.fromMap(dynamic obj) {
+    id = obj.id;
     date = obj.data()["date"].toString();
     doctorEmail = obj.data()["doctorEmail"].toString();
     doctorSpeciality = obj.data()["doctorSpeciality"].toString();

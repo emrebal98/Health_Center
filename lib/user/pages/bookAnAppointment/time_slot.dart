@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:health_center/shared/firestore_helper.dart';
 import 'package:health_center/user/pages/bookAnAppointment/confirm_appointment.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -49,16 +50,26 @@ class _TimeSlotState extends State<TimeSlotPage> {
     if (newDate != null) {
       setState(() {
         _date = newDate;
-        randomEnable();
+        enableValues();
       });
     }
   }
 
-  void randomEnable() {
-    final random = Random();
-    for (var item in timeSlotList) {
-      item.enable = random.nextBool();
-    }
+  // void randomEnable() {
+  //   final random = Random();
+  //   for (var item in timeSlotList) {
+  //     item.enable = random.nextBool();
+  //   }
+  // }
+
+  void enableValues() {
+    FirestoreHelper.getAvailableTimeSlots(
+            widget.doctor.email, DateFormat('yyy-MM-dd').format(_date))
+        .then((value) => setState(() {
+              for (var item in timeSlotList) {
+                item.enable = !value.contains(item.time);
+              }
+            }));
   }
 
   @override
@@ -84,7 +95,10 @@ class _TimeSlotState extends State<TimeSlotPage> {
         }
       }
     }
-    randomEnable();
+    // randomEnable();
+
+    enableValues();
+
     super.initState();
   }
 
@@ -100,6 +114,7 @@ class _TimeSlotState extends State<TimeSlotPage> {
           centerTitle: true,
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
+          elevation: 0,
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -231,7 +246,7 @@ class TimeObject {
   String time;
   bool enable;
   bool empty;
-  TimeObject(this.time, {this.enable = true, this.empty = false});
+  TimeObject(this.time, {this.enable = false, this.empty = false});
   TimeObject.empty({this.empty = true, this.enable = false, this.time = " "});
 }
 
