@@ -11,12 +11,13 @@ void main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.bottom]);
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: FirebaseOptions(
-          apiKey: "AIzaSyAN5HfRloZYhMNQ4uIX7IR23PtDFyBYMAg",
-          appId: "1:400833446688:android:9547339d28f709ff208d45",
-          messagingSenderId: "400833446688",
-          projectId: "myproject-b2dbc"));
+  await Firebase.initializeApp();
+  // await Firebase.initializeApp(
+  //     options: FirebaseOptions(
+  //         apiKey: "AIzaSyAN5HfRloZYhMNQ4uIX7IR23PtDFyBYMAg",
+  //         appId: "1:400833446688:android:9547339d28f709ff208d45",
+  //         messagingSenderId: "400833446688",
+  //         projectId: "myproject-b2dbc"));
   runApp(const MyApp());
 }
 
@@ -28,8 +29,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -16,7 +16,6 @@ class BottomNavigator extends StatefulWidget {
 
 class _BottomNavigatorState extends State<BottomNavigator> {
   int _currentIndex = 0;
-  
 
   void _changeTab(index) {
     setState(() {

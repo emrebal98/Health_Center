@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_center/helper/hex_color.dart';
 import 'package:health_center/login.dart';
 import 'package:health_center/main.dart';
-import 'package:settings_ui/settings_ui.dart';
+import 'package:flutter_settings_ui/flutter_settings_ui.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -58,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         SettingsSection(
           title: 'Misc',
-          tiles: const [
+          tiles: [
             SettingsTile(
                 title: 'Terms of Service', leading: Icon(Icons.description)),
             SettingsTile(
