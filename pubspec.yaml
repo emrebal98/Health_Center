@@ -37,7 +37,7 @@ dependencies:
     cupertino_icons: ^1.0.2
     intl: ^0.17.0
     confetti: ^0.6.0
-    settings_ui: ^1.0.0
+    flutter_settings_ui: ^2.0.1
     auto_size_text: ^3.0.0
 
 dev_dependencies:
