@@ -71,6 +71,30 @@ class FirestoreHelper {
     return details;
   }
 
+  static Future<List<UserDetail>> getPatients() async {
+    //late Authentication auth = Authentication();
+    //late String user_email;
+    //await auth.getUser().then((user) {
+    //  user_email = user!.email.toString();
+    //--});
+
+    List<UserDetail> details = [];
+    var data = await db.collection('users').get();
+
+    if (data != null) {
+      details =
+          data.docs.map((document) => UserDetail.fromMap(document)).toList();
+    }
+    int i = 0;
+    details.forEach((detail) {
+      detail.id = data.docs[i].id;
+    });
+
+    details =
+        details.where((element) => element.userType == "Patient").toList();
+    return details;
+  }
+
   ///Gets the user according to given email
   static Future<UserDetail> getUser(String email) async {
     List<UserDetail> details = [];
@@ -87,6 +111,21 @@ class FirestoreHelper {
 
     details = details.where((element) => element.email == email).toList();
     return details[0];
+  }
+
+  static Future<List<UserDetail>> geAllUsers() async {
+    List<UserDetail> details = [];
+    var data = await db.collection('users').get();
+
+    if (data != null) {
+      details =
+          data.docs.map((document) => UserDetail.fromMap(document)).toList();
+    }
+    int i = 0;
+    details.forEach((detail) {
+      detail.id = data.docs[i].id;
+    });
+    return details;
   }
 
   static Future<List<UserDetail>> getPatient() async {
@@ -229,6 +268,50 @@ class FirestoreHelper {
     return appointments;
   }
 
+  static Future<List<Appointment>> getDocPastAppointments() async {
+    late Authentication auth = Authentication();
+    late String user_email;
+    await auth.getUser().then((user) {
+      user_email = user!.email.toString();
+    });
+    List<Appointment> appointments = [];
+    var data = await db.collection('appointments').get();
+
+    if (data != null) {
+      appointments =
+          data.docs.map((document) => Appointment.fromMap(document)).toList();
+    }
+
+    // Update status of the appointment if date is before now
+    var idsForUpdate = appointments
+        .where((element) => DateTime.parse(element.date).isBefore(DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day)))
+        .toList();
+
+    for (var item in idsForUpdate) {
+      item.status = "Past";
+      db.collection("appointments").doc(item.id).update(item.toMap());
+    }
+
+    appointments = appointments
+        .where((element) =>
+            element.doctorEmail == user_email.toString() &&
+            element.status == "Past")
+        .toList();
+    appointments.sort(
+        (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)));
+    // var start = appointments
+    //     .where((element) => element.status.contains("Pending"))
+    //     .toList();
+
+    // var end = appointments
+    //     .where((element) => !element.status.contains("Pending"))
+    //     .toList();
+    // appointments.sort((a, b) => b.status.compareTo(a.status));
+
+    return appointments;
+  }
+
   ///Gets the available time slots of the doctor
   static Future<List<String>> getAvailableTimeSlots(
       String doctorEmail, String date) async {
@@ -295,6 +378,98 @@ class FirestoreHelper {
     return appointments[0];
   }
 
+  static Future<Appointment> getNextDocAppointment() async {
+    late Authentication auth = Authentication();
+    late String user_email;
+    await auth.getUser().then((user) {
+      user_email = user!.email.toString();
+    });
+    List<Appointment> appointments = [];
+    var data = await db.collection('appointments').get();
+
+    if (data != null) {
+      appointments =
+          data.docs.map((document) => Appointment.fromMap(document)).toList();
+    }
+
+    appointments = appointments
+        .where((element) =>
+            element.doctorEmail == user_email.toString() &&
+            element.status == "Pending")
+        .toList();
+    appointments.sort((a, b) => a.time.compareTo(b.time));
+    appointments.sort(
+        (a, b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
+
+    return appointments[0];
+  }
+
+  static Future<List<Appointment>> getDocAppointments() async {
+    late Authentication auth = Authentication();
+    late String user_email;
+    await auth.getUser().then((user) {
+      user_email = user!.email.toString();
+    });
+
+    List<Appointment> details = [];
+    var data = await db.collection('appointments').get();
+
+    if (data != null) {
+      details =
+          data.docs.map((document) => Appointment.fromMap(document)).toList();
+    }
+    int i = 0;
+    details.forEach((detail) {
+      detail.id = data.docs[i].id;
+    });
+
+    details =
+        details.where((element) => element.doctorEmail == user_email).toList();
+    return details;
+  }
+
+  static Future<List<Appointment>> getMyAppointmentsDoc() async {
+    late Authentication auth = Authentication();
+    late String user_email;
+    await auth.getUser().then((user) {
+      user_email = user!.email.toString();
+    });
+    List<Appointment> appointments = [];
+    var data = await db.collection('appointments').get();
+
+    if (data != null) {
+      appointments =
+          data.docs.map((document) => Appointment.fromMap(document)).toList();
+    }
+
+    // Update status of the appointment if date is before now
+    var idsForUpdate = appointments
+        .where((element) => DateTime.parse(element.date).isBefore(DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day)))
+        .toList();
+
+    for (var item in idsForUpdate) {
+      item.status = "Past";
+      db.collection("appointments").doc(item.id).update(item.toMap());
+    }
+
+    appointments = appointments
+        .where((element) => element.doctorEmail == user_email.toString())
+        .toList();
+    appointments.sort(
+        (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)));
+    var start = appointments
+        .where((element) => element.status.contains("Pending"))
+        .toList();
+
+    var end = appointments
+        .where((element) => !element.status.contains("Pending"))
+        .toList();
+    // appointments.sort((a, b) => b.status.compareTo(a.status));
+
+    return [...start, ...end];
+  }
+
 // ############################ PERSCRIPTION PART ######################################
 // ############################ PERSCRIPTION PART ######################################
 // ############################ PERSCRIPTION PART ######################################
@@ -323,4 +498,68 @@ class FirestoreHelper {
         .toList();
     return perscription;
   }
+
+  static Future<List<Perscription>> getDoctorPerscription() async {
+    late Authentication auth = Authentication();
+    late String user_email;
+    await auth.getUser().then((user) {
+      user_email = user!.email.toString();
+    });
+    List<Perscription> perscriptions = [];
+    var data = await db.collection('perscriptions').get();
+
+    if (data != null) {
+      perscriptions =
+          data.docs.map((document) => Perscription.fromMap(document)).toList();
+    }
+
+    perscriptions = perscriptions
+        .where((element) => element.doctorMail == user_email.toString())
+        .toList();
+
+    return perscriptions;
+  }
+
+  static Future<List<AppointmentwithName>> getAppointmentsWithName() async {
+    late List<Appointment> appointments = [];
+    late List<UserDetail> allUsers = [];
+    late List<AppointmentwithName> allData = [];
+
+    await FirestoreHelper.getMyAppointmentsDoc().then((data) {
+      appointments = data;
+      FirestoreHelper.geAllUsers().then((data) {
+        allUsers = data;
+        for (var i = 0; i < appointments.length; i++) {
+          for (var a = 0; a < allUsers.length; a++) {
+            if (appointments[i].patientEmail == allUsers[a].email) {
+              allData.add(AppointmentwithName(
+                  appointments[i].date,
+                  appointments[i].doctorEmail,
+                  appointments[i].doctorSpeciality,
+                  appointments[i].patientEmail,
+                  allUsers[a].fname + " " + allUsers[a].lname,
+                  appointments[i].time,
+                  appointments[i].status));
+            }
+          }
+        }
+      });
+    });
+
+    return allData;
+  }
+}
+
+class AppointmentwithName {
+  late String id;
+  late String date;
+  late String doctorEmail;
+  late String doctorSpeciality;
+  late String patientEmail;
+  late String patientName;
+  late String time;
+  late String status;
+
+  AppointmentwithName(this.date, this.doctorEmail, this.doctorSpeciality,
+      this.patientEmail, this.patientName, this.time, this.status);
 }
