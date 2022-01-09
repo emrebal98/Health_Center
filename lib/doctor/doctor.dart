@@ -2,12 +2,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:health_center/doctor/appointmentList.dart';
 import 'package:health_center/helper/scroll_behavior.dart';
+import 'package:health_center/model/Appointment.dart';
 import 'package:health_center/model/UserDetail.dart';
 import 'package:health_center/shared/authentication.dart';
 import 'package:health_center/shared/firestore_helper.dart';
 import 'package:health_center/user/pages/home.dart';
 import 'package:health_center/helper/hex_color.dart';
+import 'package:intl/intl.dart';
 
 class DoctorRoute extends StatefulWidget {
   const DoctorRoute({Key? key}) : super(key: key);
@@ -20,15 +23,52 @@ class _DoctorRouteState extends State<DoctorRoute> {
   UserDetail userData = UserDetail("id", "fname", "lname", "email", "password",
       "phone", "userType", "speciality");
   late Authentication auth;
-  @override
-  initState() {
-    auth = Authentication();
-    FirestoreHelper.getUserData().then((data) {
-      print(data[0].userType);
-      setState(() {
-        userData = data[0];
+
+  Appointment? nextDocAppointment;
+  UserDetail? nextPatient;
+
+  void updateNextDocAppointment() {
+    setState(() {
+      FirestoreHelper.getNextDocAppointment().then((value) {
+        nextDocAppointment = value;
+        getPatient(value.patientEmail);
       });
     });
+  }
+
+  void getPatient(String patientEmail) {
+    FirestoreHelper.getUser(patientEmail)
+        .then((value) => setState(() => nextPatient = value));
+  }
+
+  int calculateDifference(DateTime date) {
+    DateTime now = DateTime.now();
+    return DateTime(date.year, date.month, date.day)
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
+  }
+
+  @override
+  initState() {
+    try {
+      auth = Authentication();
+      FirestoreHelper.getUserData().then((data) {
+        print(data[0].userType);
+        setState(() {
+          userData = data[0];
+        });
+      });
+    } catch (error) {
+      print(error);
+      setState(() {
+        userData = UserDetail("id", "fname", "lname", "email", "password",
+            "phone", "userType", "speciality");
+      });
+    }
+    if (mounted) {
+      updateNextDocAppointment();
+    }
+    print(nextDocAppointment);
     super.initState();
   }
 
@@ -91,87 +131,89 @@ class _DoctorRouteState extends State<DoctorRoute> {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                       color: HexColor("#2E83F8"),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                      borderRadius: const BorderRadius.all(Radius.circular(5))),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Today",
-                        style: TextStyle(color: Colors.white, fontSize: 24),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text(
-                        "10 November 2021, 11.00",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w300),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 30),
-                        child: Divider(
-                          color: Colors.white24,
-                          indent: 20,
-                          endIndent: 20,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          nextDocAppointment != null
+                              ? (calculateDifference(DateTime.parse(
+                                          nextDocAppointment!.date)) ==
+                                      0
+                                  ? "Today"
+                                  : calculateDifference(DateTime.parse(
+                                              nextDocAppointment!.date)) ==
+                                          1
+                                      ? "Tomorrow"
+                                      : calculateDifference(DateTime.parse(
+                                                  nextDocAppointment!.date))
+                                              .toString() +
+                                          " Days Remaining")
+                              : "Loading...",
+                          style: TextStyle(color: Colors.white, fontSize: 24),
                         ),
-                      ),
-                      Row(
-                        children: [
-                          ClipOval(
-                            child: Image.asset(
-                              "lib/images/doctor1.png",
-                              height: 60,
-                            ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          nextDocAppointment != null
+                              ? DateFormat("dd MMM yyyy").format(DateTime.parse(
+                                      nextDocAppointment!.date)) +
+                                  " " +
+                                  nextDocAppointment!.time
+                              : "Loading...",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Divider(
+                            color: Colors.white24,
+                            indent: 20,
+                            endIndent: 20,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text(
-                                  "Emre Erkan",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                Text(
-                                  "23, Man",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                              ],
+                        ),
+                        Row(
+                          children: [
+                            ClipOval(
+                              child: Image.asset(
+                                "lib/images/doctor1.png",
+                                height: 60,
+                              ),
                             ),
-                          ),
-                        ],
-                      )
-                    ],
+                            Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      nextPatient != null
+                                          ? nextPatient!.fname +
+                                              " " +
+                                              nextPatient!.lname
+                                          : "Loading...",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                  ],
+                                ))
+                          ],
+                        )
+                      ]),
+                ),
+                InkWell(
+                  onTap: () => print("Samet"),
+                  child: DividerTitle(
+                    title: "Next Patients",
+                    button: true,
+                    top: 5,
                   ),
-                ),
-                const DividerTitle(
-                  title: "Next Patients",
-                  button: true,
-                  top: 5,
-                ),
-                const OtherPatients(
-                  imageName: "doctor9.png",
-                  patientName: "Emre Erkan",
-                  sex: "10 November 2021, 11.30",
-                  age: 23,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                const OtherPatients(
-                    imageName: "doctor9.png",
-                    patientName: "Samet Sarıal",
-                    sex: "10 November 2021, 12.00",
-                    age: 23),
-                SizedBox(
-                  height: 40,
                 ),
               ],
             )
@@ -208,7 +250,9 @@ class DividerTitle extends StatelessWidget {
         ),
         button
             ? TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(appointmentListRoute());
+                },
                 child: const Text("See All",
                     style: TextStyle(fontWeight: FontWeight.w400)))
             : Container(),

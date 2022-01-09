@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_center/doctor/perscription.dart';
+import 'package:health_center/doctor/perscriptionList.dart';
 import 'package:health_center/model/Perscription.dart';
 import 'package:health_center/model/UserDetail.dart';
 import 'package:health_center/shared/firestore_helper.dart';
@@ -136,28 +137,24 @@ class _SetPerscriptionState extends State<SetPerscription> {
                       userData!.email,
                       userData!.speciality,
                       widget.patientMail,
-                      "description");
+                      setPerscription.text);
                   FirestoreHelper.addNewPercription(newPerscription);
                 } catch (errorMessage) {
                   print('Error: $errorMessage');
                 }
+                Navigator.of(context).pop();
               }
             },
             icon: const Icon(Icons.add, size: 18),
             label: const Text('Add Perscription'),
           ),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 20, top: 30),
-            child: Text(
-              "Previous Perscription",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+          InkWell(
+            child: DividerTitle1(
+              title: "Next Perscriptions",
+              button: true,
+              top: 5,
             ),
           ),
-          Expanded(
-            flex: 4,
-            child: PreviousPerscription(patientMail: widget.patientMail),
-          )
         ],
       ),
     );
@@ -243,5 +240,42 @@ class _PreviousPerscriptionState extends State<PreviousPerscription> {
                 );
               }));
     }
+  }
+}
+
+class DividerTitle1 extends StatelessWidget {
+  const DividerTitle1(
+      {Key? key,
+      required this.title,
+      required this.button,
+      this.left = 20,
+      this.top = 15,
+      this.right = 20,
+      this.bottom = 20})
+      : super(key: key);
+
+  final String title;
+  final bool button;
+  final double left, top, right, bottom;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:
+          EdgeInsets.only(left: left, top: top, bottom: bottom, right: right),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+        ),
+        button
+            ? TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(perscriptionListRoute());
+                },
+                child: const Text("See All",
+                    style: TextStyle(fontWeight: FontWeight.w400)))
+            : Container(),
+      ]),
+    );
   }
 }

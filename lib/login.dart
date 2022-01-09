@@ -33,15 +33,10 @@ class _LoginState extends State<Login> {
   }
 
   Future submit(context) async {
-    await auth.login("samet@gmail.com", "samet2828");
+    await auth.login("doctor@gmail.com", "samet2828");
     runApp(MyApp(
-      home: user_bottom.BottomNavigator(),
+      home: doctor_bottom.BottomNavigator(),
     ));
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //       builder: (context) => const user_bottom.BottomNavigator()),
-    // );
     if (passwordController.text.isEmpty && emailController.text.isEmpty) {
       setState(() {
         _warningMessage = true;
