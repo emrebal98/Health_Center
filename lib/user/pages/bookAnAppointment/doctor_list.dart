@@ -71,15 +71,6 @@ class _DoctorListPageState extends State<DoctorListPage> {
             color: Colors.blue,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-              color: Colors.blue,
-            ),
-          )
-        ],
       ),
       body: ListView.builder(
           itemCount: doctors.length,

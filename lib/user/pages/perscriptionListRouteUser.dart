@@ -64,12 +64,21 @@ class _PerscriptionUserPageState extends State<PerscriptionUserPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text(
-            "Perscriptions",
+            "Prescriptions",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
           ),
           centerTitle: true,
           backgroundColor: Colors.blue,
           shadowColor: Colors.transparent,
+          leading: IconButton(
+            onPressed: () {
+              
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.blue,
+            ),
+          ),
         ),
         body: ScrollConfiguration(
             behavior: MyScrollBehavior(),
@@ -78,47 +87,31 @@ class _PerscriptionUserPageState extends State<PerscriptionUserPage> {
                     itemCount: allData.length,
                     itemBuilder: (context, index) {
                       final item = allData[index];
-                      return AbsorbPointer(
-                        absorbing: false,
-                        child: Dismissible(
-                          key: UniqueKey(),
-                          onDismissed: (direction) {
-                            print(allData[index].code);
-                            deletePerscription(allData[index].code)
-                                .then((value) => print(value));
-                          },
-                          background: Container(
-                              margin: const EdgeInsets.only(top: 15, bottom: 5),
-                              padding: const EdgeInsets.only(right: 20),
-                              color: Colors.red,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [],
-                              )),
-                          child: perscriptions.isEmpty != true
-                              ? ListTile(
-                                  title: Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        flex: 5,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: HexColor("#EBF2F5"),
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(5))),
-                                          padding: const EdgeInsets.only(
-                                              left: 20, top: 20),
-                                          child: Column(
-                                            children: [
-                                              Row(
+                      return Expanded(
+                        child: perscriptions.isEmpty != true
+                            ? ListTile(
+                                title: Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      flex: 5,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: HexColor("#EBF2F5"),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(5))),
+                                        padding: const EdgeInsets.only(
+                                            left: 20, top: 20),
+                                        child: Column(
+                                          children: [
+                                            SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
@@ -140,7 +133,7 @@ class _PerscriptionUserPageState extends State<PerscriptionUserPage> {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                        "Doctor Name : " +
+                                                        "Doctor Email : " +
                                                             item.doctorEmail,
                                                         style: const TextStyle(
                                                             fontSize: 15,
@@ -165,25 +158,21 @@ class _PerscriptionUserPageState extends State<PerscriptionUserPage> {
                                                     ],
                                                   )
                                                 ],
-                                              )
-                                            ],
-                                          ),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ))
-                              : const SizedBox(height: 40),
-                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ))
+                            : const SizedBox(height: 40),
                       );
                     },
                   ))
                 : (Center(
                     child: Text("No Recorded prescription"),
                   ))));
-  }
-
-  Future deletePerscription(String id) async {
-    FirestoreHelper.detePerscription(id).then((value) => value);
   }
 }
