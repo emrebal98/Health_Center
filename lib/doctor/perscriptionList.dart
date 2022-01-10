@@ -37,14 +37,21 @@ class PerscriptionPage extends StatefulWidget {
 
 class _PerscriptionPageState extends State<PerscriptionPage> {
   List<Perscription> perscriptions = [];
+  late List<PerscriptionwithName> allData = [];
 
   @override
   void initState() {
     if (mounted) {
-      FirestoreHelper.getDoctorPerscription().then((data) {
-        print(data);
+      FirestoreHelper.getPerscriptionWithName().then((data) {
+        //print("123.---" + data.length.toString());
         setState(() {
-          perscriptions = data;
+          allData = data;
+        });
+        FirestoreHelper.getDoctorPerscription().then((data) {
+          print(data);
+          setState(() {
+            perscriptions = data;
+          });
         });
       });
     }
@@ -68,9 +75,9 @@ class _PerscriptionPageState extends State<PerscriptionPage> {
         body: ScrollConfiguration(
           behavior: MyScrollBehavior(),
           child: ListView.builder(
-            itemCount: perscriptions.length,
+            itemCount: allData.length,
             itemBuilder: (context, index) {
-              final item = perscriptions[index];
+              final item = allData[index];
               return AbsorbPointer(
                 absorbing: false,
                 child: Dismissible(
@@ -124,7 +131,7 @@ class _PerscriptionPageState extends State<PerscriptionPage> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                item.patientMail,
+                                                item.patientName,
                                                 style: const TextStyle(
                                                     fontSize: 15,
                                                     fontWeight:
@@ -158,5 +165,9 @@ class _PerscriptionPageState extends State<PerscriptionPage> {
             },
           ),
         ));
+  }
+
+  deletetedPerscription(Perscription perscription) {
+    perscriptions.insert(0, perscription);
   }
 }

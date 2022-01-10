@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:health_center/doctor/appointmentList.dart';
+import 'package:health_center/doctor/perscriptionList.dart';
 import 'package:health_center/helper/scroll_behavior.dart';
 import 'package:health_center/model/Appointment.dart';
+import 'package:health_center/model/Perscription.dart';
 import 'package:health_center/model/UserDetail.dart';
 import 'package:health_center/shared/authentication.dart';
 import 'package:health_center/shared/firestore_helper.dart';
@@ -26,6 +28,9 @@ class _DoctorRouteState extends State<DoctorRoute> {
 
   Appointment? nextDocAppointment;
   UserDetail? nextPatient;
+
+  late List<Appointment> appointments = [];
+  late List<AppointmentwithName> allData = [];
 
   void updateNextDocAppointment() {
     setState(() {
@@ -66,6 +71,19 @@ class _DoctorRouteState extends State<DoctorRoute> {
       });
     }
     if (mounted) {
+      FirestoreHelper.getAppointmentsWithName().then((data) {
+        //print("123.---" + data.length.toString());
+        setState(() {
+          allData = data;
+        });
+        FirestoreHelper.getMyAppointmentsDoc().then((data) {
+          //print("12.---" + data.length.toString());
+          setState(() {
+            appointments = data;
+          });
+          //print("object+124124" + allData.length.toString());
+        });
+      });
       updateNextDocAppointment();
     }
     print(nextDocAppointment);
@@ -179,7 +197,7 @@ class _DoctorRouteState extends State<DoctorRoute> {
                           children: [
                             ClipOval(
                               child: Image.asset(
-                                "lib/images/doctor1.png",
+                                "lib/images/patient3.png",
                                 height: 60,
                               ),
                             ),
@@ -211,6 +229,34 @@ class _DoctorRouteState extends State<DoctorRoute> {
                   onTap: () => print("Samet"),
                   child: DividerTitle(
                     title: "Next Patients",
+                    button: true,
+                    top: 5,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  // ignore: sized_box_for_whitespace
+                  child: Container(
+                    height: 200,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: allData
+                          .map(
+                            (patient) => PatientCard(
+                              imageName: "patient3",
+                              patientName: patient.patientName,
+                              patientstatus: patient.status,
+                              appdate: patient.date,
+                              apptime: patient.time,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  child: DividerTitle1(
+                    title: "Given Perscriptions",
                     button: true,
                     top: 5,
                   ),
@@ -286,7 +332,7 @@ class OtherPatients extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset("lib/images/doctor9.png"),
+            Image.asset("lib/images/patient3.png"),
             Padding(
               padding: const EdgeInsets.only(top: 30, left: 15),
               child: Column(
@@ -310,6 +356,194 @@ class OtherPatients extends StatelessWidget {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class PreviousPerscription extends StatefulWidget {
+  const PreviousPerscription({Key? key, required this.patientMail})
+      : super(key: key);
+  final String patientMail;
+  @override
+  _PreviousPerscriptionState createState() => _PreviousPerscriptionState();
+}
+
+class _PreviousPerscriptionState extends State<PreviousPerscription> {
+  List<Perscription> perscriptions = [];
+
+  @override
+  void initState() {
+    if (mounted) {
+      FirestoreHelper.getPatientPerscription(widget.patientMail).then((data) {
+        print(data);
+        setState(() {
+          perscriptions = data;
+        });
+      });
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (perscriptions.isEmpty) {
+      return Container(
+        child: Text("There is no pre perscription"),
+      );
+    } else {
+      return Expanded(
+          flex: 4,
+          child: ListView.builder(
+              itemCount: perscriptions.length,
+              itemBuilder: (context, position) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                      border: Border(
+                    bottom:
+                        BorderSide(width: 1, color: Colors.black.withAlpha(20)),
+                  )),
+                  height: 100,
+                  child: Material(
+                      child: InkWell(
+                          onTap: () {
+                            print("clicked");
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Row(children: [
+                              Image.asset("lib/images/doctor2.png"),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 15),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      perscriptions[position].patientMail,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(perscriptions[position].description,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 13))
+                                  ],
+                                ),
+                              )
+                            ]),
+                          ))),
+                );
+              }));
+    }
+  }
+}
+
+class DividerTitle1 extends StatelessWidget {
+  const DividerTitle1(
+      {Key? key,
+      required this.title,
+      required this.button,
+      this.left = 20,
+      this.top = 15,
+      this.right = 20,
+      this.bottom = 20})
+      : super(key: key);
+
+  final String title;
+  final bool button;
+  final double left, top, right, bottom;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:
+          EdgeInsets.only(left: left, top: top, bottom: bottom, right: right),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+        ),
+        button
+            ? TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(perscriptionListRoute());
+                },
+                child: const Text("See All",
+                    style: TextStyle(fontWeight: FontWeight.w400)))
+            : Container(),
+      ]),
+    );
+  }
+}
+
+class PatientCard extends StatelessWidget {
+  const PatientCard(
+      {Key? key,
+      required this.imageName,
+      required this.patientName,
+      required this.patientstatus,
+      required this.appdate,
+      required this.apptime})
+      : super(key: key);
+
+  final String imageName, patientName, patientstatus, appdate, apptime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 140,
+      margin: const EdgeInsets.only(left: 10, top: 15, bottom: 15, right: 10),
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2), //color of shadow
+              spreadRadius: 2, //spread radius
+              blurRadius: 3, // blur radius
+              offset: const Offset(0, 2), // changes position of shadow
+              //first paramerter of offset is left-right
+              //second parameter is top to down
+            ),
+          ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ClipOval(
+            child: Image.asset(
+              "lib/images/" + imageName + ".png",
+              height: 60,
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            patientName,
+            style: const TextStyle(fontWeight: FontWeight.w400),
+          ),
+          Text(
+            patientstatus,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 13),
+          ),
+          Text(
+            appdate,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 13),
+          ),
+          Text(
+            apptime,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 13),
+          ),
+        ],
       ),
     );
   }
