@@ -66,12 +66,11 @@ class _SetPerscriptionState extends State<SetPerscription> {
       appBar: AppBar(
         title: const Text(
           "Perscription Page",
-          style: TextStyle(
-              color: Colors.black, fontSize: 18, fontWeight: FontWeight.w400),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.blue,
         shadowColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
@@ -92,7 +91,7 @@ class _SetPerscriptionState extends State<SetPerscription> {
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Row(
               children: [
-                Image.asset("lib/images/doctor9.png"),
+                Image.asset("lib/images/patient3.png"),
                 Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Column(
@@ -148,134 +147,8 @@ class _SetPerscriptionState extends State<SetPerscription> {
             icon: const Icon(Icons.add, size: 18),
             label: const Text('Add Perscription'),
           ),
-          InkWell(
-            child: DividerTitle1(
-              title: "Next Perscriptions",
-              button: true,
-              top: 5,
-            ),
-          ),
         ],
       ),
-    );
-  }
-}
-
-class PreviousPerscription extends StatefulWidget {
-  const PreviousPerscription({Key? key, required this.patientMail})
-      : super(key: key);
-  final String patientMail;
-  @override
-  _PreviousPerscriptionState createState() => _PreviousPerscriptionState();
-}
-
-class _PreviousPerscriptionState extends State<PreviousPerscription> {
-  List<Perscription> perscriptions = [];
-
-  @override
-  void initState() {
-    if (mounted) {
-      FirestoreHelper.getPatientPerscription(widget.patientMail).then((data) {
-        print(data);
-        setState(() {
-          perscriptions = data;
-        });
-      });
-    }
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (perscriptions.isEmpty) {
-      return Container(
-        child: Text("There is no pre perscription"),
-      );
-    } else {
-      return Expanded(
-          flex: 4,
-          child: ListView.builder(
-              itemCount: perscriptions.length,
-              itemBuilder: (context, position) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                      border: Border(
-                    bottom:
-                        BorderSide(width: 1, color: Colors.black.withAlpha(20)),
-                  )),
-                  height: 100,
-                  child: Material(
-                      child: InkWell(
-                          onTap: () {
-                            print("clicked");
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Row(children: [
-                              Image.asset("lib/images/doctor2.png"),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      perscriptions[position].patientMail,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(perscriptions[position].description,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w300,
-                                            fontSize: 13))
-                                  ],
-                                ),
-                              )
-                            ]),
-                          ))),
-                );
-              }));
-    }
-  }
-}
-
-class DividerTitle1 extends StatelessWidget {
-  const DividerTitle1(
-      {Key? key,
-      required this.title,
-      required this.button,
-      this.left = 20,
-      this.top = 15,
-      this.right = 20,
-      this.bottom = 20})
-      : super(key: key);
-
-  final String title;
-  final bool button;
-  final double left, top, right, bottom;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          EdgeInsets.only(left: left, top: top, bottom: bottom, right: right),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-        ),
-        button
-            ? TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(perscriptionListRoute());
-                },
-                child: const Text("See All",
-                    style: TextStyle(fontWeight: FontWeight.w400)))
-            : Container(),
-      ]),
     );
   }
 }

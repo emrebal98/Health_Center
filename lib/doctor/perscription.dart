@@ -44,6 +44,7 @@ class _PerscriptiontPageState extends State<PerscriptiontPage> {
   @override
   initState() {
     auth = Authentication();
+
     FirestoreHelper.getPatient().then((data) {
       setState(() {
         patientslist = data;
@@ -59,11 +60,10 @@ class _PerscriptiontPageState extends State<PerscriptiontPage> {
       appBar: AppBar(
         title: const Text(
           "Give Perscription",
-          style: TextStyle(
-              color: Colors.black, fontSize: 18, fontWeight: FontWeight.w400),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
         ),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.blue,
         shadowColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
@@ -165,7 +165,7 @@ List<Widget> setPerscriptions(List<UserDetail> list) {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           PatientsCard(
-            imageName: "doctor9",
+            imageName: "patient3",
             patientsName: list[i].fname + " " + list[i].lname,
             patientMail: list[i].email,
             empty: !(i < len),

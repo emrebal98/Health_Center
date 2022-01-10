@@ -548,6 +548,35 @@ class FirestoreHelper {
 
     return allData;
   }
+
+  static Future<List<PerscriptionwithName>> getPerscriptionWithName() async {
+    late List<Perscription> perscriptions = [];
+    late List<UserDetail> allUsers = [];
+    late List<PerscriptionwithName> allData = [];
+
+    await FirestoreHelper.getDoctorPerscription().then((data) {
+      perscriptions = data;
+      FirestoreHelper.geAllUsers().then((data) {
+        allUsers = data;
+        for (var i = 0; i < perscriptions.length; i++) {
+          for (var a = 0; a < allUsers.length; a++) {
+            if (perscriptions[i].patientMail == allUsers[a].email) {
+              allData.add(PerscriptionwithName(
+                perscriptions[i].code,
+                perscriptions[i].doctorMail,
+                perscriptions[i].speciality,
+                perscriptions[i].patientMail,
+                allUsers[a].fname + " " + allUsers[a].lname,
+                perscriptions[i].description,
+              ));
+            }
+          }
+        }
+      });
+    });
+
+    return allData;
+  }
 }
 
 class AppointmentwithName {
@@ -562,4 +591,17 @@ class AppointmentwithName {
 
   AppointmentwithName(this.date, this.doctorEmail, this.doctorSpeciality,
       this.patientEmail, this.patientName, this.time, this.status);
+}
+
+class PerscriptionwithName {
+  late String id;
+  late String code;
+  late String doctorEmail;
+  late String doctorSpeciality;
+  late String patientEmail;
+  late String patientName;
+  late String description;
+
+  PerscriptionwithName(this.code, this.doctorEmail, this.doctorSpeciality,
+      this.patientEmail, this.patientName, this.description);
 }
