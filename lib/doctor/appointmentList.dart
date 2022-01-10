@@ -70,7 +70,6 @@ class _AppointmentPageState extends State<AppointmentPage> {
         centerTitle: true,
         backgroundColor: Colors.blue,
         shadowColor: Colors.transparent,
-        automaticallyImplyLeading: false,
       ),
       body: ScrollConfiguration(
         behavior: MyScrollBehavior(),

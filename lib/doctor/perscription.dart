@@ -65,24 +65,6 @@ class _PerscriptiontPageState extends State<PerscriptiontPage> {
         centerTitle: true,
         backgroundColor: Colors.blue,
         shadowColor: Colors.transparent,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.close,
-            color: Colors.blue,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-              color: Colors.blue,
-            ),
-          )
-        ],
       ),
       body: Column(
         children: setPerscriptions(patientslist),

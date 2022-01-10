@@ -517,10 +517,13 @@ class FirestoreHelper {
     });
     List<Perscription> perscriptions = [];
     var data = await db.collection('perscriptions').get();
-
+    print(" perscription id->" + data.docs[0].id.toString());
     if (data != null) {
       perscriptions =
           data.docs.map((document) => Perscription.fromMap(document)).toList();
+    }
+    for (var i = 0; i < perscriptions.length; i++) {
+      perscriptions[i].code = data.docs[i].id;
     }
 
     perscriptions = perscriptions
@@ -572,6 +575,7 @@ class FirestoreHelper {
           for (var a = 0; a < allUsers.length; a++) {
             if (perscriptions[i].patientMail == allUsers[a].email) {
               allData.add(PerscriptionwithName(
+                data[i].id,
                 perscriptions[i].code,
                 perscriptions[i].doctorMail,
                 perscriptions[i].speciality,
@@ -586,6 +590,16 @@ class FirestoreHelper {
     });
 
     return allData;
+  }
+
+  static Future<bool> detePerscription(perscriptionID) async {
+    try {
+      await db.collection('perscriptions').doc(perscriptionID).delete();
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
   }
 }
 
@@ -612,6 +626,12 @@ class PerscriptionwithName {
   late String patientName;
   late String description;
 
-  PerscriptionwithName(this.code, this.doctorEmail, this.doctorSpeciality,
-      this.patientEmail, this.patientName, this.description);
+  PerscriptionwithName(
+      this.id,
+      this.code,
+      this.doctorEmail,
+      this.doctorSpeciality,
+      this.patientEmail,
+      this.patientName,
+      this.description);
 }

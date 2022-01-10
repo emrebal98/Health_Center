@@ -70,104 +70,120 @@ class _PerscriptionPageState extends State<PerscriptionPage> {
           centerTitle: true,
           backgroundColor: Colors.blue,
           shadowColor: Colors.transparent,
-          automaticallyImplyLeading: false,
         ),
         body: ScrollConfiguration(
-          behavior: MyScrollBehavior(),
-          child: ListView.builder(
-            itemCount: allData.length,
-            itemBuilder: (context, index) {
-              final item = allData[index];
-              return AbsorbPointer(
-                absorbing: false,
-                child: Dismissible(
-                  // Each Dismissible must contain a Key. Keys allow Flutter to
-                  // uniquely identify widgets.
-                  key: UniqueKey(),
-                  // Provide a function that tells the app
-                  // what to do after an item has been swiped away.
-
-                  //Swipe side widget
-                  background: Container(
-                      margin: const EdgeInsets.only(top: 15, bottom: 5),
-                      padding: const EdgeInsets.only(right: 20),
-                      color: Colors.red,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [],
-                      )),
-
-                  child: perscriptions.isEmpty != true
-                      ? ListTile(
-                          title: Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 5,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: HexColor("#EBF2F5"),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(5))),
-                                  padding:
-                                      const EdgeInsets.only(left: 20, top: 20),
-                                  child: Column(
+            behavior: MyScrollBehavior(),
+            child: allData.isNotEmpty
+                ? (ListView.builder(
+                    itemCount: allData.length,
+                    itemBuilder: (context, index) {
+                      final item = allData[index];
+                      return AbsorbPointer(
+                        absorbing: false,
+                        child: Dismissible(
+                          key: UniqueKey(),
+                          onDismissed: (direction) {
+                            print(allData[index].code);
+                            deletePerscription(allData[index].code)
+                                .then((value) => print(value));
+                          },
+                          background: Container(
+                              margin: const EdgeInsets.only(top: 15, bottom: 5),
+                              padding: const EdgeInsets.only(right: 20),
+                              color: Colors.red,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [],
+                              )),
+                          child: perscriptions.isEmpty != true
+                              ? ListTile(
+                                  title: Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(
-                                            width: 20,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                      Expanded(
+                                        flex: 5,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: HexColor("#EBF2F5"),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(5))),
+                                          padding: const EdgeInsets.only(
+                                              left: 20, top: 20),
+                                          child: Column(
                                             children: [
-                                              Text(
-                                                item.patientName,
-                                                style: const TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                              const SizedBox(
-                                                height: 4,
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10),
-                                                child: Text(item.description),
-                                              ),
-                                              const SizedBox(
-                                                height: 20,
-                                              ),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  ClipOval(
+                                                    child: Image.asset(
+                                                      "lib/images/medical-care.png",
+                                                      height: 60,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        "Patient Name : " +
+                                                            item.patientName,
+                                                        style: const TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 4,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 10),
+                                                        child: Text(
+                                                            "Description : " +
+                                                                item.description),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              )
                                             ],
-                                          )
-                                        ],
+                                          ),
+                                        ),
                                       )
                                     ],
                                   ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ))
-                      : const SizedBox(height: 40),
-                ),
-              );
-            },
-          ),
-        ));
+                                ))
+                              : const SizedBox(height: 40),
+                        ),
+                      );
+                    },
+                  ))
+                : (Center(
+                    child: Text("No Recorded prescription"),
+                  ))));
   }
 
-  deletetedPerscription(Perscription perscription) {
-    perscriptions.insert(0, perscription);
+  Future deletePerscription(String id) async {
+    FirestoreHelper.detePerscription(id).then((value) => value);
   }
 }

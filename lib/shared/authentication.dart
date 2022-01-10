@@ -41,6 +41,18 @@ class Authentication {
     return user;
   }
 
+  Future<String> updatePassword(newPassword) async {
+    User? user = await _firebaseAuth.currentUser;
+    var message = "";
+    await user!.updatePassword(newPassword).then((_) {
+      message = ("Successfully changed password");
+    }).catchError((error) {
+      message = ("Password can't be changed" + error.toString());
+      //This might happen, when the wrong password is in, the user isn't found, or if the user hasn't logged in recently.
+    });
+    return message;
+  }
+
   Future getUserSpeciality(userEmail) async {
     var data = await FirestoreHelper.getUserList();
     return data;
