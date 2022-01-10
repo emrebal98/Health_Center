@@ -601,6 +601,37 @@ class FirestoreHelper {
       return false;
     }
   }
+
+  static Future<Perscription> getPrescriptionData(perscriptionID) async {
+    List<Perscription> details = [];
+    var data = await db.collection('perscriptions').get();
+
+    if (data != null) {
+      details =
+          data.docs.map((document) => Perscription.fromMap(document)).toList();
+    }
+    int i = 0;
+    for (var i = 0; i < details.length; i++) {
+      details[i].code = data.docs[i].id;
+    }
+    details =
+        details.where((element) => element.code == perscriptionID).toList();
+    return details[0];
+  }
+
+  static Future<bool> updatePerscription(
+      perscriptionID, Perscription newData) async {
+    try {
+      await db
+          .collection('perscriptions')
+          .doc(perscriptionID)
+          .update(newData.toMap());
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
+  }
 }
 
 class AppointmentwithName {
