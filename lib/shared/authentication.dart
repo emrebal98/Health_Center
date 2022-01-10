@@ -17,18 +17,23 @@ class Authentication {
   }
 
   Future signUp(UserDetail userDetail) async {
-    UserCredential userCredentials =
-        await _firebaseAuth.createUserWithEmailAndPassword(
-            email: userDetail.email, password: userDetail.password);
-    User? user = userCredentials.user;
-    var user_id;
-    var result = db
-        .collection('users')
-        .add(userDetail.toMap())
-        .then((value) => user_id = value.id)
-        .catchError((error) => print(error));
-    print(user_id);
-    return user?.uid ?? "";
+    try {
+      UserCredential userCredentials =
+          await _firebaseAuth.createUserWithEmailAndPassword(
+              email: userDetail.email, password: userDetail.password);
+
+      User? user = userCredentials.user;
+      var user_id;
+      var result = db
+          .collection('users')
+          .add(userDetail.toMap())
+          .then((value) => user_id = value.id)
+          .catchError((error) => print(error));
+
+      return user?.uid ?? "";
+    } catch (err) {
+      print(err);
+    }
   }
 
   Future<void> signOut() async {

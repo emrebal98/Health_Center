@@ -66,8 +66,10 @@ class _PerscriptiontPageState extends State<PerscriptiontPage> {
         backgroundColor: Colors.blue,
         shadowColor: Colors.transparent,
       ),
-      body: Column(
-        children: setPerscriptions(patientslist),
+      body: SingleChildScrollView(
+        child: Column(
+          children: setPerscriptions(patientslist),
+        ),
       ),
     );
   }

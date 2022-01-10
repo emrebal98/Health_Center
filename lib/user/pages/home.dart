@@ -227,7 +227,7 @@ class _HomeRouteState extends State<HomeRoute> {
 
                   const DividerTitle(
                     title: "Doctors you have visited",
-                    button: true,
+                    button: false,
                     top: 0,
                     bottom: 5,
                   ),
