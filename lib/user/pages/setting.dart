@@ -17,11 +17,14 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool lockInBackground = true;
   bool notificationsEnabled = true;
-  void signOut() async {
+  void signOut(context) async {
     late Authentication auth;
     auth = Authentication();
-    await auth.signOut();
-    runApp(MyApp(home: Login()));
+    await auth.signOut().then((value) => value);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+    );
   }
 
   @override
@@ -75,7 +78,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: 'Sign out',
               leading: Icon(Icons.exit_to_app),
               onPressed: (context) {
-                signOut();
+                signOut(context);
               },
             ),
           ],

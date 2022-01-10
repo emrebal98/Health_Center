@@ -6,6 +6,7 @@ import 'package:health_center/model/Appointment.dart';
 import 'package:health_center/model/UserDetail.dart';
 import 'package:health_center/shared/authentication.dart';
 import 'package:health_center/shared/firestore_helper.dart';
+import 'package:health_center/user/pages/perscriptionListRouteUser.dart';
 import 'package:intl/intl.dart';
 
 class HomeRoute extends StatefulWidget {
@@ -249,19 +250,11 @@ class _HomeRouteState extends State<HomeRoute> {
                                   .toList())),
                     ),
                   ),
-                  const DividerTitle(
+                  const DividerTitlePrescription(
                     title: "Your Prescriptions",
                     button: true,
                     top: 5,
                   ),
-                  const PrescriptionCard(
-                      imageName: "doctor9.png",
-                      recipeName: "Tuberculosis Recipe",
-                      recipeDesc: "Given by Tawfiq Bahri"),
-                  const SizedBox(
-                    // To scroll more
-                    height: 40,
-                  )
                 ],
               )
             ],
@@ -408,6 +401,43 @@ class PrescriptionCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class DividerTitlePrescription extends StatelessWidget {
+  const DividerTitlePrescription(
+      {Key? key,
+      required this.title,
+      required this.button,
+      this.left = 20,
+      this.top = 15,
+      this.right = 20,
+      this.bottom = 20})
+      : super(key: key);
+
+  final String title;
+  final bool button;
+  final double left, top, right, bottom;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:
+          EdgeInsets.only(left: left, top: top, bottom: bottom, right: right),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+        ),
+        button
+            ? TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(perscriptionListRouteUser());
+                },
+                child: const Text("See All",
+                    style: TextStyle(fontWeight: FontWeight.w400)))
+            : Container(),
+      ]),
     );
   }
 }

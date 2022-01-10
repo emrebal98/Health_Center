@@ -121,7 +121,7 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 const SizedBox(
-                  height: 100,
+                  height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(30.0),

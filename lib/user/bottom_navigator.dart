@@ -5,6 +5,7 @@ import 'package:health_center/user/pages/home.dart';
 import 'package:health_center/user/pages/appointment_history.dart';
 import 'package:health_center/user/pages/perscription.dart';
 import 'package:health_center/user/pages/setting.dart';
+import 'package:health_center/user/pages/perscriptionListRouteUser.dart';
 
 class BottomNavigator extends StatefulWidget {
   const BottomNavigator({Key? key});
@@ -24,7 +25,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   final List _screens = [
     const HomeRoute(),
     const AppointmentHistory(),
-    const PrescriptionHistory(),
+    const PerscriptionUserPage(),
     const SettingsScreen(),
   ];
 
