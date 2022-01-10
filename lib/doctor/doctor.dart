@@ -258,7 +258,7 @@ class _DoctorRouteState extends State<DoctorRoute> {
                 ),
                 InkWell(
                   child: DividerTitle1(
-                    title: "Given Perscriptions",
+                    title: "Given Prescriptions",
                     button: true,
                     top: 5,
                   ),
@@ -391,7 +391,7 @@ class _PreviousPerscriptionState extends State<PreviousPerscription> {
   Widget build(BuildContext context) {
     if (perscriptions.isEmpty) {
       return Container(
-        child: Text("There is no pre perscription"),
+        child: Text("There is no pre prescription"),
       );
     } else {
       return Expanded(

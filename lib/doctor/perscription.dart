@@ -59,7 +59,7 @@ class _PerscriptiontPageState extends State<PerscriptiontPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Give Perscription",
+          "Give Prescription",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
         ),
         centerTitle: true,
@@ -134,7 +134,7 @@ List<Widget> setPerscriptions(List<UserDetail> list) {
 
   //Divider title
   result.add(const DividerTitle(
-    title: "Choose a patient to set perscription",
+    title: "Choose a patient to set Prescription",
     button: false,
     bottom: 0,
   ));

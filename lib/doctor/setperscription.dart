@@ -65,7 +65,7 @@ class _SetPerscriptionState extends State<SetPerscription> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Perscription Page",
+          "Prescription Page",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
           textAlign: TextAlign.center,
         ),
@@ -112,12 +112,12 @@ class _SetPerscriptionState extends State<SetPerscription> {
                 controller: setPerscription,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: "Set Perscription",
+                  hintText: "Set Prescription",
                 ),
               )),
           ElevatedButton.icon(
             onPressed: () {
-              print('add perscription');
+              print('add Prescription');
               if (setPerscription.text.isEmpty) {
                 print("please add perscription description");
               } else {
@@ -132,11 +132,12 @@ class _SetPerscriptionState extends State<SetPerscription> {
                 } catch (errorMessage) {
                   print('Error: $errorMessage');
                 }
-                Navigator.of(context).pop();
+
+                Navigator.of(context).push(perscriptionListRoute());
               }
             },
             icon: const Icon(Icons.add, size: 18),
-            label: const Text('Add Perscription'),
+            label: const Text('Add Prescription'),
           ),
         ],
       ),

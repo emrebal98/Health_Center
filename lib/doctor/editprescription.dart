@@ -39,7 +39,7 @@ class _EditPerscriptionState extends State<EditPerscription> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Perscription Page",
+          "Prescription Page",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
           textAlign: TextAlign.center,
         ),
@@ -162,7 +162,7 @@ class _EditPerscriptionState extends State<EditPerscription> {
                       });
             },
             icon: const Icon(Icons.add, size: 18),
-            label: const Text('Edit Perscription'),
+            label: const Text('Edit Prescription'),
           ),
         ],
       ),

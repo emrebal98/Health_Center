@@ -632,6 +632,80 @@ class FirestoreHelper {
       return false;
     }
   }
+
+  static Future<List<Perscription>> getPatient1Perscription() async {
+    late Authentication auth = Authentication();
+    late String user_email;
+    await auth.getUser().then((user) {
+      user_email = user!.email.toString();
+    });
+    List<Perscription> perscriptions = [];
+    var data = await db.collection('perscriptions').get();
+    print(" perscription id->" + data.docs[0].id.toString());
+    if (data != null) {
+      perscriptions =
+          data.docs.map((document) => Perscription.fromMap(document)).toList();
+    }
+    for (var i = 0; i < perscriptions.length; i++) {
+      perscriptions[i].code = data.docs[i].id;
+    }
+
+    perscriptions = perscriptions
+        .where((element) => element.patientMail == user_email.toString())
+        .toList();
+
+    return perscriptions;
+  }
+
+  static Future<List<PerscriptionwithUserName>>
+      getUserPerscriptionWithName() async {
+    late List<Perscription> perscriptions = [];
+    late List<UserDetail> allUsers = [];
+    late List<PerscriptionwithUserName> allData = [];
+
+    await FirestoreHelper.getPatient1Perscription().then((data) {
+      perscriptions = data;
+      FirestoreHelper.geAllUsers().then((data) {
+        allUsers = data;
+        for (var i = 0; i < perscriptions.length; i++) {
+          for (var a = 0; a < allUsers.length; a++) {
+            if (perscriptions[i].patientMail == allUsers[a].email) {
+              allData.add(PerscriptionwithUserName(
+                data[i].id,
+                perscriptions[i].code,
+                perscriptions[i].doctorMail,
+                perscriptions[i].speciality,
+                perscriptions[i].patientMail,
+                allUsers[a].fname + " " + allUsers[a].lname,
+                perscriptions[i].description,
+              ));
+            }
+          }
+        }
+      });
+    });
+
+    return allData;
+  }
+}
+
+class PerscriptionwithUserName {
+  late String id;
+  late String code;
+  late String doctorEmail;
+  late String doctorSpeciality;
+  late String patientEmail;
+  late String doctorName;
+  late String description;
+
+  PerscriptionwithUserName(
+      this.id,
+      this.code,
+      this.doctorEmail,
+      this.doctorSpeciality,
+      this.patientEmail,
+      this.doctorName,
+      this.description);
 }
 
 class AppointmentwithName {

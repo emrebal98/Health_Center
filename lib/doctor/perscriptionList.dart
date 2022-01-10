@@ -66,7 +66,7 @@ class _PerscriptionPageState extends State<PerscriptionPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text(
-            "Perscriptions",
+            "Prescriptions",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
           ),
           centerTitle: true,
@@ -172,8 +172,7 @@ class _PerscriptionPageState extends State<PerscriptionPage> {
                                                           child: Expanded(
                                                             child: Text("Description : " +
                                                                 item.description
-                                                                    .substring(
-                                                                        0, 10)),
+                                                                ),
                                                           ),
                                                         ),
                                                         const SizedBox(

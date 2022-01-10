@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:health_center/helper/hex_color.dart';
 
+import 'package:health_center/user/bottom_navigator.dart' as user_bottom;
+
 Route successPageRoute() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
@@ -101,7 +103,11 @@ class _SuccessPageState extends State<SuccessPage> {
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: HexColor("#00B25B")),
                   onPressed: () {
-                    Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => user_bottom.BottomNavigator()),
+                    );
                   },
                   child: const Text(
                     "Done",
