@@ -25,6 +25,16 @@ class FirestoreHelper {
     return details;
   }
 
+  static Future<bool> updateUserItems(userDataID, UserDetail newData) async {
+    try {
+      await db.collection('users').doc(userDataID).update(newData.toMap());
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
+  }
+
   static Future<List<UserDetail>> getUserData() async {
     late Authentication auth = Authentication();
     late String user_email;

@@ -33,9 +33,9 @@ class _LoginState extends State<Login> {
   }
 
   Future submit(context) async {
-    await auth.login("eerkan@gmail.com", "klmnasdfg");
+    await auth.login("doctor@gmail.com", "samet2828");
     runApp(MyApp(
-      home: user_bottom.BottomNavigator(),
+      home: doctor_bottom.BottomNavigator(),
     ));
     if (passwordController.text.isEmpty && emailController.text.isEmpty) {
       setState(() {
