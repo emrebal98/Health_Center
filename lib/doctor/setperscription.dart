@@ -72,15 +72,6 @@ class _SetPerscriptionState extends State<SetPerscription> {
         centerTitle: true,
         backgroundColor: Colors.blue,
         shadowColor: Colors.transparent,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: Colors.blue,
-          ),
-        ),
       ),
       body: ListView(
         padding: const EdgeInsets.only(top: 10, right: 10, left: 10),

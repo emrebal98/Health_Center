@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Perscription {
+  late String id;
   late String code;
   late String doctorMail;
   late String speciality;

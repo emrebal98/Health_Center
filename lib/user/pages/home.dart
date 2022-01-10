@@ -235,17 +235,18 @@ class _HomeRouteState extends State<HomeRoute> {
                     // ignore: sized_box_for_whitespace
                     child: Container(
                       height: 160,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: visitedDoctors
-                            .map(
-                              (doctor) => DoctorCard(
-                                  imageName: "doctor1",
-                                  doctorName: doctor.fname,
-                                  doctorDesc: doctor.speciality),
-                            )
-                            .toList(),
-                      ),
+                      child: visitedDoctors.isEmpty
+                          ? (Center(child: Text("No Past Appointment Found!")))
+                          : (ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: visitedDoctors
+                                  .map(
+                                    (doctor) => DoctorCard(
+                                        imageName: "doctor1",
+                                        doctorName: doctor.fname,
+                                        doctorDesc: doctor.speciality),
+                                  )
+                                  .toList())),
                     ),
                   ),
                   const DividerTitle(

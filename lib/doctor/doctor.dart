@@ -226,10 +226,9 @@ class _DoctorRouteState extends State<DoctorRoute> {
                       ]),
                 ),
                 InkWell(
-                  onTap: () => print("Samet"),
                   child: DividerTitle(
                     title: "Next Patients",
-                    button: true,
+                    button: false,
                     top: 5,
                   ),
                 ),
@@ -237,22 +236,25 @@ class _DoctorRouteState extends State<DoctorRoute> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   // ignore: sized_box_for_whitespace
                   child: Container(
-                    height: 200,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: allData
-                          .map(
-                            (patient) => PatientCard(
-                              imageName: "patient3",
-                              patientName: patient.patientName,
-                              patientstatus: patient.status,
-                              appdate: patient.date,
-                              apptime: patient.time,
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
+                      height: 200,
+                      child: allData.isNotEmpty
+                          ? (ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: allData
+                                  .map(
+                                    (patient) => PatientCard(
+                                      imageName: "patient3",
+                                      patientName: patient.patientName,
+                                      patientstatus: patient.status,
+                                      appdate: patient.date,
+                                      apptime: patient.time,
+                                    ),
+                                  )
+                                  .toList(),
+                            ))
+                          : (Center(
+                              child: Text("No Data found!"),
+                            ))),
                 ),
                 InkWell(
                   child: DividerTitle1(
