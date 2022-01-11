@@ -71,9 +71,7 @@ class _PerscriptionUserPageState extends State<PerscriptionUserPage> {
           backgroundColor: Colors.blue,
           shadowColor: Colors.transparent,
           leading: IconButton(
-            onPressed: () {
-              
-            },
+            onPressed: () {},
             icon: const Icon(
               Icons.arrow_back_ios_new_rounded,
               color: Colors.blue,
