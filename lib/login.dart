@@ -19,6 +19,8 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   bool _isObscure = true;
   bool _warningMessage = false;
+
+  String _warningMessageContent = "";
   late String userType;
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
@@ -36,16 +38,28 @@ class _LoginState extends State<Login> {
     if (passwordController.text.isEmpty && emailController.text.isEmpty) {
       setState(() {
         _warningMessage = true;
+        _warningMessageContent = "Please fill all fields!";
       });
     } else {
-      var _userEmail =
-          await auth.login(emailController.text, passwordController.text);
-      print('Login for user $_userEmail');
+      late String _userEmail;
+      try {
+        _userEmail =
+            await auth.login(emailController.text, passwordController.text);
+      } catch (err) {
+        setState(() {
+          _warningMessage = true;
+          _warningMessageContent = "Your information wrong";
+        });
+      }
+      setState(() {
+        _warningMessageContent = "Login for user $_userEmail";
+      });
       await FirestoreHelper.getUserData().then((data) {
         print(data[0].userType);
         setState(() {
           userData = data[0];
           details = data;
+          _warningMessageContent = "Login for user $_userEmail";
         });
       });
       if (userData.userType == 'Doctor') {
@@ -96,7 +110,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 const SizedBox(
-                  height: 100,
+                  height: 50,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(30.0),
@@ -104,7 +118,7 @@ class _LoginState extends State<Login> {
                     children: <Widget>[
                       Visibility(
                         child: Text(
-                          "Your username or password wrong!",
+                          _warningMessageContent,
                           style: TextStyle(
                             color: Colors.red[800],
                             fontWeight: FontWeight.bold,

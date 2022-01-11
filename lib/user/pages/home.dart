@@ -250,11 +250,6 @@ class _HomeRouteState extends State<HomeRoute> {
                                   .toList())),
                     ),
                   ),
-                  const DividerTitlePrescription(
-                    title: "Your Prescriptions",
-                    button: true,
-                    top: 5,
-                  ),
                 ],
               )
             ],
